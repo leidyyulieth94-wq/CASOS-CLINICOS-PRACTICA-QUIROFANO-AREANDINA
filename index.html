@@ -1,244 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Simulación Clínica de Enfermería</title>
-<meta name="description" content="Casos clínicos interactivos de priorización quirúrgica para estudiantes de Enfermería.">
 <style>
-:root{
-  --navy:#102a43;--blue:#1f6feb;--teal:#0f766e;--green:#15803d;--red:#b42318;
-  --bg:#f4f7fb;--card:#fff;--line:#d9e2ec;--muted:#627d98;--shadow:0 12px 35px rgba(16,42,67,.10);
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#eef5ff,#f8fbff);color:var(--navy)}
-button{font:inherit}
-.top{background:#fff;border-bottom:1px solid var(--line);padding:15px 22px;display:flex;align-items:center;justify-content:space-between;gap:15px;position:sticky;top:0;z-index:10}
-.brand{font-weight:900;letter-spacing:.02em}.brand span{color:var(--blue)}
-.container{max-width:1050px;margin:auto;padding:28px 18px 50px}
-.hero{background:linear-gradient(135deg,#102a43,#1f4f7a);color:white;border-radius:24px;padding:35px;box-shadow:var(--shadow);margin-bottom:20px}
-.hero h1{font-size:clamp(30px,5vw,48px);margin:8px 0 10px;line-height:1.05}.hero p{max-width:760px;line-height:1.6;color:#e7f0fa}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#e6f0ff;color:#174a7a;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
-.hero .badge{background:rgba(255,255,255,.14);color:#fff}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow)}
-.case-card{cursor:pointer;transition:.2s;min-height:260px}.case-card:hover{transform:translateY(-2px);border-color:#9bbce4}
-.case-icon{font-size:50px}.case-card h2{margin:10px 0 5px}.muted{color:var(--muted);line-height:1.55}
-.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:800;cursor:pointer;min-height:44px}.primary{background:var(--blue);color:white}.secondary{background:#eef4fb;color:var(--navy);border:1px solid var(--line)}.danger{background:#fff0ee;color:var(--red);border:1px solid #f1c2bd}
-.btn:focus,.option:focus{outline:3px solid #9bc4ff;outline-offset:2px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.sim-header{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:14px}.score{font-size:24px;font-weight:900}.progress{height:9px;background:#e8eef5;border-radius:99px;overflow:hidden}.progress>div{height:100%;background:var(--blue);transition:.3s}
-.scene{display:grid;grid-template-columns:280px 1fr;gap:16px}.avatar-card{text-align:center}.avatar{font-size:115px;display:inline-block;line-height:1;margin:10px;filter:drop-shadow(0 8px 8px rgba(0,0,0,.12))}.avatar.talking{animation:talk .18s infinite alternate}@keyframes talk{from{transform:scaleY(1)}to{transform:scaleY(.96) translateY(-2px)}}
-.speech{background:#f2f7fd;border:1px solid var(--line);border-radius:18px;padding:17px;text-align:left;min-height:100px;line-height:1.6}.speaker{font-weight:900;margin-bottom:5px}
-.vitals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:15px 0}.vital{background:#f8fafc;border:1px solid var(--line);padding:11px;border-radius:12px}.vital small{display:block;color:var(--muted)}.vital b{font-size:17px}
-.options{display:grid;gap:10px;margin-top:15px}.option{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px;text-align:left;cursor:pointer;line-height:1.45}.option:hover{border-color:#7ca9dd;background:#f8fbff}.option.correct{border-color:#7bc596;background:#edf9f1}.option.wrong{border-color:#e7aaa4;background:#fff3f1}
-.feedback{padding:14px;border-radius:13px;margin-top:12px;line-height:1.55}.good{background:#edf9f1;border:1px solid #9bd2ad}.bad{background:#fff3f1;border:1px solid #e5b1ab}.info{background:#eef5ff;border:1px solid #b9d1ef}
-.timeline{display:flex;gap:7px;margin:15px 0}.dot{height:9px;flex:1;border-radius:99px;background:#dbe5ef}.dot.done{background:var(--blue)}
-.result{text-align:center}.bigscore{font-size:64px;font-weight:950}.level{font-size:20px;font-weight:900;margin:4px 0 15px}.checklist{text-align:left;display:grid;gap:8px;margin:15px 0}.check{padding:10px 12px;border-radius:10px;background:#f7fafc;border:1px solid var(--line)}
-.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:25px}
-@media(max-width:760px){.grid,.scene{grid-template-columns:1fr}.vitals{grid-template-columns:repeat(2,1fr)}.hero{padding:25px}.top{position:static}}
+body{margin:0;font-family:Arial,sans-serif;background:#eef6fc;color:#17324d}header{background:white;padding:16px 6%;border-bottom:1px solid #d9e4ee;font-weight:bold}.wrap{max-width:1050px;margin:auto;padding:28px 18px}.hero,.card,.panel{background:white;border-radius:20px;padding:25px;box-shadow:0 10px 30px #12385a18;margin-bottom:18px}.hero{background:#12385a;color:white}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.tag{font-size:12px;font-weight:bold;text-transform:uppercase;color:#39739d}.hero .tag{color:white}.btn{background:#1976d2;color:white;border:0;border-radius:11px;padding:13px 18px;font-weight:bold;cursor:pointer}.option{display:block;width:100%;text-align:left;background:white;color:#17324d;border:1px solid #c9d9e6;border-radius:11px;padding:14px;margin:9px 0;cursor:pointer}.option:hover{background:#f1f8ff}.correct{background:#edf9f0!important;border-color:#238636!important}.wrong{background:#fff1f1!important;border-color:#c62828!important}.vitals{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.v{background:#f5f8fa;padding:12px;border-radius:10px}.v b{display:block;font-size:19px}.speech{background:#f8fbfd;border:1px solid #d9e4ee;border-radius:15px;padding:18px;font-size:18px;line-height:1.5}.feedback{padding:15px;border-radius:12px;margin-top:12px;background:#fff8e8}.score{font-size:24px;font-weight:bold}table{width:100%;border-collapse:collapse}td,th{padding:10px;border-bottom:1px solid #d9e4ee;text-align:left}@media(max-width:700px){.grid{grid-template-columns:1fr}.vitals{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="brand">🩺 Simulación <span>Clínica</span></div>
-  <button class="btn secondary" id="homeBtn" style="display:none">Inicio</button>
-</header>
-
-<main class="container" id="app"></main>
-
+<header>🩺 Simulación Clínica · Enfermería</header>
+<div class="wrap">
+<section id="home">
+<div class="hero"><div class="tag">Práctica virtual · Priorización quirúrgica</div><h1>Casos clínicos interactivos</h1><p>Seleccione el caso asignado. La simulación entrena valoración, razonamiento, ABCDE, comunicación y escalamiento.</p></div>
+<div class="grid">
+<div class="card"><div class="tag">🔴 Alta complejidad</div><h2>Paula Andrea Arias Díaz</h2><p>Hemorragia postoperatoria y deterioro hemodinámico.</p><button class="btn" onclick="start('arias')">Iniciar caso →</button></div>
+<div class="card"><div class="tag">🟡 Complejidad media–alta</div><h2>Paula Andrea Morales Arana</h2><p>Paciente inicialmente estable con información progresiva y decisiones de seguridad.</p><button class="btn" onclick="start('morales')">Iniciar caso →</button></div>
+</div>
+</section>
+<section id="sim" class="hidden panel"><div class="score">⭐ <span id="score">0</span> puntos</div><div id="app"></div></section>
+</div>
 <script>
-const app=document.getElementById('app'),homeBtn=document.getElementById('homeBtn');
-let caseId=null, step=0, score=0, answered=false;
-
-const cases={
-  arias:{
-    student:"Paula Andrea Arias Díaz",
-    title:"Hemorragia postoperatoria y deterioro hemodinámico",
-    icon:"👩‍⚕️",
-    patient:"Paciente C",
-    patientAvatar:"👩🏻‍⚕️",
-    intro:"Usted recibe turno en una unidad quirúrgica. Tiene a cargo un paciente de 58 años, dos horas después de una cirugía abdominal, que presenta sangrado abundante en la herida.",
-    vitals:["88/54 mmHg","118 lpm","24 rpm","94%"],
-    dialogue:"Enfermera… estoy muy mareado y siento que me voy a desmayar.",
-    questions:[
-      {q:"¿Qué hallazgo debe aumentar más la prioridad de este paciente?",opts:[
-        ["El dolor postoperatorio aislado.",false],
-        ["El sangrado activo acompañado de hipotensión, taquicardia, palidez y mareo.",true],
-        ["La edad del paciente.",false],
-        ["Que la cirugía fue abdominal.",false]
-      ],feedback:"La prioridad se basa en riesgo vital, estabilidad clínica y signos de deterioro, no solamente en la intensidad del dolor."},
-      {q:"¿Cuál es la actuación inicial más apropiada?",opts:[
-        ["Esperar unos minutos para comprobar si el sangrado disminuye.",false],
-        ["Atender primero a los pacientes estables.",false],
-        ["Realizar valoración ABCDE, monitorizar, solicitar ayuda y comunicar urgentemente el deterioro según protocolo institucional.",true],
-        ["Centrarse únicamente en el dolor.",false]
-      ],feedback:"El documento orienta a valoración ABCDE, monitorización, solicitud de ayuda y notificación al equipo médico, siguiendo el protocolo institucional."},
-      {q:"¿Qué información debe comunicar con prioridad?",opts:[
-        ["Solo que el paciente está ansioso.",false],
-        ["Solo la intensidad del dolor.",false],
-        ["Sangrado activo, PA 88/54, FC 118, FR 24, SpO₂ 94%, palidez y mareo, además de la evolución clínica.",true],
-        ["Que el paciente desea descansar.",false]
-      ],feedback:"Una comunicación clínica útil debe incluir los datos objetivos, signos de alarma y evolución del estado del paciente."},
-      {q:"Han pasado 10 minutos. La PA baja a 80/48 y la FC sube a 126. Está más pálido y refiere sensación de desmayo. ¿Qué significa?",opts:[
-        ["Es una evolución esperada y no cambia la prioridad.",false],
-        ["Existe deterioro clínico y mayor compromiso hemodinámico; requiere escalamiento urgente.",true],
-        ["La situación es menos urgente porque ya fue valorado.",false],
-        ["Solo debe reevaluarse el dolor.",false]
-      ],feedback:"El descenso de la presión, aumento de la frecuencia cardiaca, palidez y sensación de desmayo indican deterioro clínico."}
-    ]
-  },
-  morales:{
-    student:"Paula Andrea Morales Arana",
-    title:"Valoración de paciente postoperatorio estable",
-    icon:"👩‍⚕️",
-    patient:"Paciente A",
-    patientAvatar:"👨🏻‍⚕️",
-    intro:"Usted recibe turno y debe valorar a un paciente de 45 años, cuatro horas después de una hernioplastia. El paciente está consciente, orientado y presenta dolor 5/10.",
-    vitals:["128/78 mmHg","86 lpm","18 rpm","97%"],
-    dialogue:"Enfermera, tengo un dolor de 5 sobre 10, pero me siento bien y no tengo dificultad para respirar.",
-    questions:[
-      {q:"¿Cuál es la primera valoración más adecuada?",opts:[
-        ["Valorar estado general, signos vitales, dolor y herida quirúrgica, identificando signos de alarma.",true],
-        ["Atender solamente el dolor.",false],
-        ["No valorar porque los signos vitales son normales.",false],
-        ["Enviar inmediatamente al paciente a otro servicio.",false]
-      ],feedback:"Aunque el paciente está estable, Enfermería debe realizar una valoración sistemática y buscar signos de alarma."},
-      {q:"Los signos vitales son estables y la herida está limpia y seca. ¿Cómo interpreta inicialmente el caso?",opts:[
-        ["Como un paciente con compromiso hemodinámico.",false],
-        ["Como un paciente clínicamente estable que requiere vigilancia y valoración continua.",true],
-        ["Como una emergencia vital.",false],
-        ["Como un paciente que no necesita seguimiento.",false]
-      ],feedback:"Los datos del caso A muestran estabilidad clínica, aunque esto no elimina la necesidad de vigilancia."},
-      {q:"¿Qué dato haría cambiar la prioridad de este paciente?",opts:[
-        ["Que el paciente permanezca consciente y orientado.",false],
-        ["Que continúe con signos vitales estables.",false],
-        ["La aparición de signos de deterioro clínico o una complicación que comprometa su estabilidad.",true],
-        ["Que solicite información sobre su procedimiento.",false]
-      ],feedback:"La prioridad puede cambiar cuando aparecen signos de deterioro o riesgo para la vida."},
-      {q:"¿Cuál es una pregunta de pensamiento crítico adecuada al comparar este caso con un paciente que presenta sangrado e hipotensión?",opts:[
-        ["¿Cuál paciente tiene mayor edad?",false],
-        ["¿Cuál paciente presenta mayor riesgo vital y signos de deterioro?",true],
-        ["¿Cuál paciente habla más?",false],
-        ["¿Cuál paciente tiene más dolor necesariamente?",false]
-      ],feedback:"La priorización debe centrarse en riesgo vital, estabilidad clínica y signos de deterioro."}
-    ]
-  }
-};
-
-function speak(text){
-  if(!('speechSynthesis' in window)) return;
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='es-CO';u.rate=.95;u.pitch=1;
-  const av=document.querySelector('.avatar');
-  if(av){av.classList.add('talking');u.onend=()=>av.classList.remove('talking');}
-  speechSynthesis.speak(u);
-}
-
-function renderHome(){
-  caseId=null;step=0;score=0;answered=false;homeBtn.style.display='none';
-  app.innerHTML=`
-  <section class="hero">
-    <span class="badge">Práctica virtual · Enfermería</span>
-    <h1>Casos clínicos interactivos</h1>
-    <p>Priorización de pacientes en el servicio de cirugía. Cada estudiante resolverá un caso clínico diferente mediante valoración, toma de decisiones, identificación de signos de alarma y escalamiento.</p>
-    <div class="row"><button class="btn primary" onclick="document.getElementById('cases').scrollIntoView({behavior:'smooth'})">Comenzar</button></div>
-  </section>
-  <section id="cases" class="grid">
-    ${Object.entries(cases).map(([id,c])=>`
-      <article class="card case-card" onclick="startCase('${id}')">
-        <div class="case-icon">${c.icon}</div>
-        <span class="badge">Caso asignado</span>
-        <h2>${c.student}</h2>
-        <p class="muted">${c.title}</p>
-        <button class="btn primary">Iniciar caso →</button>
-      </article>`).join('')}
-  </section>
-  <div class="footer">Material educativo de simulación. Las intervenciones clínicas deben ajustarse a las competencias del estudiante y a los protocolos institucionales.</div>`;
-}
-
-function startCase(id){
-  caseId=id;step=0;score=0;answered=false;homeBtn.style.display='block';renderStep();
-}
-
-function renderStep(){
-  const c=cases[caseId], total=c.questions.length;
-  const q=c.questions[step];
-  const pct=Math.round((step/total)*100);
-  app.innerHTML=`
-  <div class="sim-header">
-    <div><span class="badge">Caso clínico</span><h1 style="margin:6px 0 4px;font-size:30px">${c.student}</h1><p class="muted">${c.title}</p></div>
-    <div style="text-align:right"><div class="score">${score}/10</div><small class="muted">Puntuación</small></div>
-  </div>
-  <div class="timeline">${c.questions.map((_,i)=>`<div class="dot ${i<=step?'done':''}"></div>`).join('')}</div>
-  <div class="scene">
-    <aside class="card avatar-card">
-      <div class="avatar">${c.patientAvatar}</div>
-      <div class="speech"><div class="speaker">${c.patient}</div>${c.dialogue}</div>
-      <div class="actions" style="margin-top:10px"><button class="btn secondary" onclick="speak(cases['${caseId}'].dialogue)">🔊 Escuchar al paciente</button></div>
-    </aside>
-    <section class="card">
-      <span class="badge">Situación clínica</span>
-      <p>${c.intro}</p>
-      <div class="vitals">${[['PA',c.vitals[0]],['FC',c.vitals[1]],['FR',c.vitals[2]],['SpO₂',c.vitals[3]]].map(v=>`<div class="vital"><small>${v[0]}</small><b>${v[1]}</b></div>`).join('')}</div>
-      <h2 style="font-size:20px;margin-top:20px">Decisión ${step+1}</h2>
-      <p><b>${q.q}</b></p>
-      <div class="options">${q.opts.map((o,i)=>`<button class="option" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${o[0]}</button>`).join('')}</div>
-      <div id="feedback"></div>
-    </section>
-  </div>`;
-}
-
-function answer(index){
-  if(answered)return;
-  answered=true;
-  const c=cases[caseId],q=c.questions[step],buttons=[...document.querySelectorAll('.option')],correct=q.opts[index][1];
-  buttons[index].classList.add(correct?'correct':'wrong');
-  buttons.forEach((b,i)=>{b.disabled=true;if(q.opts[i][1])b.classList.add('correct')});
-  if(correct){
-    const pts=(step===0?3:step===1?3:step===2?2:2);
-    score+=pts;
-    document.getElementById('feedback').innerHTML=`<div class="feedback good"><b>✓ Decisión adecuada.</b><br>${q.feedback}</div>`;
-  }else{
-    document.getElementById('feedback').innerHTML=`<div class="feedback bad"><b>⚠️ Revise su razonamiento.</b><br>${q.feedback}</div>`;
-  }
-  const next=document.createElement('div');next.className='row';next.style.marginTop='14px';
-  next.innerHTML=step<c.questions.length-1?'<button class="btn primary" onclick="nextStep()">Continuar →</button>':'<button class="btn primary" onclick="finish()">Ver resultado →</button>';
-  document.getElementById('feedback').appendChild(next);
-}
-
-function nextStep(){step++;answered=false;renderStep();}
-function finish(){
-  const c=cases[caseId];
-  const level=score>=9?'EXCELENTE':score>=7?'BUEN DESEMPEÑO':'REQUIERE REFUERZO';
-  const color=score>=9?'good':score>=7?'info':'bad';
-  app.innerHTML=`
-  <section class="card result">
-    <span class="badge">Simulación completada</span>
-    <h1 style="font-size:34px;margin:12px 0 0">${c.student}</h1>
-    <p class="muted">${c.title}</p>
-    <div class="bigscore">${score}<span style="font-size:24px">/10</span></div>
-    <div class="level">${level}</div>
-    <div class="feedback ${color}">
-      <b>Retroalimentación clínica</b><br>
-      La priorización debe fundamentarse en la valoración clínica, los signos de alarma, la estabilidad y el riesgo para la vida. La intensidad del dolor por sí sola no determina la prioridad.
-    </div>
-    <div class="checklist">
-      <div class="check">✓ Identificación de signos de alarma</div>
-      <div class="check">✓ Razonamiento de priorización</div>
-      <div class="check">✓ Valoración inicial y ABCDE cuando corresponde</div>
-      <div class="check">✓ Comunicación y escalamiento oportuno</div>
-    </div>
-    <p class="muted"><b>Pregunta final para sustentar:</b> ¿Qué tres datos clínicos nunca debería pasar por alto durante la recepción de un paciente postoperatorio?</p>
-    <div class="row" style="justify-content:center;margin-top:18px">
-      <button class="btn primary" onclick="startCase('${caseId}')">🔄 Repetir caso</button>
-      <button class="btn secondary" onclick="renderHome()">← Elegir otro caso</button>
-    </div>
-  </section>`;
-}
-homeBtn.addEventListener('click',renderHome);
-renderHome();
+const data={
+arias:{name:"Paula Andrea Arias Díaz",steps:[
+["scene","Recepción del turno","Paciente de 58 años, 2 horas después de cirugía abdominal. Hay sangrado abundante en la herida. Está pálido, ansioso y refiere mareo.","PA 88/54|FC 118|FR 24|SpO₂ 94%","Enfermera… estoy muy mareado. Siento que me voy a desmayar.","¿Cuál es la prioridad inicial?",["Esperar y observar.","Realizar valoración inmediata, reconocer signos de compromiso y solicitar ayuda según protocolo.","Atender primero a un paciente con dolor moderado.","Centrarse solo en el dolor."],1,"El sangrado activo asociado a hipotensión, taquicardia, palidez y mareo representa la mayor prioridad."],
+["q","Razonamiento clínico","","","","¿Qué conjunto de datos sustenta mejor la prioridad?",["Dolor y ansiedad solamente.","Edad y tipo de cirugía.","Sangrado activo + PA baja + FC elevada + palidez + mareo.","SpO₂ de 94% aislada."],2,"La prioridad se fundamenta en riesgo vital y deterioro."],
+["q","Primeros minutos","","","","¿Qué enfoque organiza la valoración ante el deterioro?",["ABCDE y monitorización/reevaluación según protocolo.","Esperar diez minutos.","Valorar únicamente la herida.","Realizar solo escala de dolor."],0,"El documento incluye ABCDE como objetivo de aprendizaje."],
+["scene","Evolución clínica","Han pasado 10 minutos. Aumenta el sangrado. El paciente está más pálido y refiere sensación de desmayo.","PA 80/48|FC 126|FR 24|SpO₂ 94%","Me siento peor… creo que me voy a desmayar.","¿Qué debe hacer?",["Considerar que la prioridad disminuyó.","Reevaluar inmediatamente, reconocer deterioro y escalar según protocolo.","Continuar observando sin comunicar.","Esperar a que aparezca dolor intenso."],1,"La evolución muestra mayor sangrado, hipotensión, taquicardia, palidez y presíncope."],
+["q","Comunicación","","","","¿Qué comunicación es más útil para escalar?",["El paciente no se ve bien.","Tiene sangrado.","Comunicar evolución, signos vitales y hallazgos relevantes siguiendo el protocolo.","No informar hasta terminar el turno."],2,"La comunicación debe transmitir situación, evolución y urgencia."]
+]},
+morales:{name:"Paula Andrea Morales Arana",steps:[
+["scene","Inicio del turno","Paciente de 45 años, 4 horas después de hernioplastia. Dolor 5/10, consciente y orientado. Herida limpia y seca.","PA 128/78|FC 86|FR 18|SpO₂ 97%","Enfermera, me duele la herida, pero creo que estoy bien.","Antes de concluir que está estable, ¿qué conducta es más segura?",["Dar por terminada la valoración.","Realizar valoración sistemática, revisar evolución, dolor, herida y signos de alarma.","Intervenir sin valorar.","Atender a otro paciente porque no hay prioridad."],1,"Los datos son inicialmente estables, pero se requiere valoración sistemática."],
+["q","Buscar información","El paciente comenta una molestia abdominal diferente. La simulación añade este dato como extensión pedagógica.","","","¿Qué información adicional debe obtener?",["Solo el nombre.","Características y evolución de la molestia, síntomas asociados y reevaluación clínica.","Preguntar si quiere dormir.","Ignorar el dato porque los signos iniciales eran normales."],1,"El razonamiento clínico exige obtener información adicional y reevaluar."],
+["q","Comparar evolución","Durante la reevaluación aparece una variación respecto a la valoración inicial.","","","¿Qué principio debe aplicar?",["Los valores iniciales hacen innecesaria la reevaluación.","Comparar los datos actuales con los iniciales y valorar la tendencia.","Todo cambio significa emergencia grave.","Solo importa el dolor."],1,"La tendencia clínica aporta información que un dato aislado no muestra."],
+["scene","Información progresiva","Extensión pedagógica: el paciente refiere náuseas y mayor incomodidad.","PA 118/70|FC 102|FR 20|SpO₂ 96%","Ahora siento náuseas y estoy más incómodo.","¿Cuál es la mejor siguiente decisión?",["Ignorar los síntomas porque no hay sangrado.","Reevaluar estado general, signos vitales y buscar signos de alarma asociados.","Concluir inmediatamente que existe una complicación grave.","Finalizar el caso."],1,"La decisión segura es reevaluar antes de concluir."],
+["q","ABCDE","Si la reevaluación genera preocupación, ¿qué enfoque organiza la valoración?","","","",["Solo revisar el dolor.","ABCDE: vía aérea, respiración, circulación, estado neurológico y exposición/valoración general.","Solo revisar la herida.","Esperar a otro profesional."],1,"ABCDE forma parte de los objetivos de aprendizaje."],
+["q","Comunicación y escalamiento","","","","¿Cuál comunicación demuestra mejor razonamiento?",["El paciente está raro.","Comunicar antecedentes, hallazgos, signos vitales, cambios respecto a la valoración inicial y motivo de preocupación, según protocolo.","No comunicar porque está consciente.","Comunicar solo el dolor."],1,"La comunicación debe permitir comprender la situación, evolución y motivo del escalamiento."]
+]}};
+let cur,idx,score;
+function start(id){cur=data[id];idx=0;score=0;document.getElementById("home").classList.add("hidden");document.getElementById("sim").classList.remove("hidden");render()}
+function render(){let s=cur.steps[idx],a=document.getElementById("app");document.getElementById("score").textContent=score;
+let html="<div class='tag'>"+cur.name+"</div><h2>"+s[1]+"</h2>";
+if(s[0]=="scene"){html+="<div class='speech'><b>Paciente:</b><p>"+s[4]+"</p><button class='btn' onclick='speak()'>🔊 Escuchar al paciente</button></div><p>"+s[2]+"</p><div class='vitals'>"+s[3].split("|").map(x=>"<div class='v'>"+x.split(" ")[0]+"<b>"+x.substring(x.indexOf(" ")+1)+"</b></div>").join("")+"</div>"}
+html+="<h3>"+s[5]+"</h3><div id='opts'>"+s[6].map((x,i)=>"<button class='option' onclick='answer("+i+")'>"+String.fromCharCode(65+i)+". "+x+"</button>").join("")+"</div><div id='fb'></div>";a.innerHTML=html}
+function answer(i){let s=cur.steps[idx],bs=[...document.querySelectorAll(".option")];bs.forEach(x=>x.disabled=true);bs[i].classList.add(i==s[7]?"correct":"wrong");if(i==s[7])score+=2;document.getElementById("score").textContent=score;document.getElementById("fb").innerHTML="<div class='feedback'>"+(i==s[7]?"✅ <b>Decisión adecuada.</b>":"⚠️ <b>Revisemos el razonamiento.</b>")+"<br>"+s[8]+"</div><br><button class='btn' onclick='next()'>"+(idx==cur.steps.length-1?"Ver resultado →":"Continuar →")+"</button>"}
+function next(){idx++;idx<cur.steps.length?render():finish()}
+function speak(){let s=cur.steps[idx];if(!s[4])return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(s[4]);u.lang="es-CO";u.rate=.95;speechSynthesis.speak(u)}
+function finish(){document.getElementById("app").innerHTML="<div class='tag'>Simulación completada</div><h2>🏆 "+cur.name+"</h2><div class='score'>"+score+"/"+(cur.steps.length*2)+" puntos</div><p>Resultado orientativo. La sustentación del razonamiento clínico debe complementar la puntuación.</p><table><tr><th>Competencia</th><th>Evaluación</th></tr><tr><td>Priorización</td><td>Riesgo y estabilidad</td></tr><tr><td>Razonamiento</td><td>Uso de datos y evolución</td></tr><tr><td>Intervenciones</td><td>Respuesta dentro de competencias</td></tr><tr><td>Riesgos</td><td>Signos de alarma</td></tr><tr><td>Comunicación</td><td>Información clara</td></tr><tr><td>Escalamiento</td><td>Solicitud oportuna de ayuda</td></tr></table><br><button class='btn' onclick='location.reload()'>Volver al inicio</button>"}
 </script>
 </body>
 </html>
