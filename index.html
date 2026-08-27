@@ -113,6 +113,43 @@ h1{font-size:clamp(32px,5vw,52px);margin:10px 0}
 .ws-analysis{margin-top:15px;background:#fff;border:1px solid #d8e4ed;border-radius:15px;padding:15px}.ws-analysis textarea{width:100%;min-height:90px;border:1px solid #cbd9e4;border-radius:11px;padding:12px;resize:vertical;font:inherit}
 .ws-analysis button{margin-top:10px;background:#18864b;color:#fff;border:0;border-radius:11px;padding:12px 16px;font-weight:900;cursor:pointer}
 @media(max-width:620px){.ws-board{gap:2px;padding:6px}.ws-cell{font-size:11px}.ws-words{grid-template-columns:1fr}.ws-hiddenphrase .phrase{font-size:21px}}
+
+/* ===== RUTA COMPLETA · 4 ACTIVIDADES POR ESTUDIANTE ===== */
+.route-title{margin-top:28px;padding:22px;border-radius:22px;background:linear-gradient(135deg,#12345a,#1976d2);color:#fff}
+.route-title h3{margin:4px 0 8px;font-size:25px}.route-title p{margin:0;opacity:.92;line-height:1.55}
+.activity-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-top:16px}
+.activity-card{background:#fff;border:1px solid #d8e4ed;border-radius:20px;padding:20px;box-shadow:0 10px 28px rgba(18,52,90,.08)}
+.activity-card h4{margin:7px 0;font-size:18px}.activity-number{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#eaf4ff;color:#1976d2;font-weight:900}
+.mini-case{display:none;margin-top:15px;background:#f8fbfe;border:1px solid #d6e4ed;border-radius:16px;padding:16px}
+.mini-option{width:100%;text-align:left;background:#fff;border:1px solid #d3e0e8;border-radius:11px;padding:12px;margin:6px 0;cursor:pointer;font-weight:700}
+.mini-option.ok{background:#edf9f1;border-color:#8ccaa0}.mini-option.no{background:#fff3f3;border-color:#e2aaaa}
+.matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
+.matrix button{border:1px solid #d3e0e8;background:#fff;border-radius:12px;padding:13px;cursor:pointer;font-weight:800}
+.matrix button.active{background:#1976d2;color:#fff;border-color:#1976d2}
+.text-task textarea{width:100%;min-height:120px;border:1px solid #cad9e4;border-radius:12px;padding:13px;font:inherit;resize:vertical}
+.checklist{display:grid;gap:8px;margin-top:12px}.checkline{display:flex;gap:10px;align-items:flex-start;background:#f8fbfe;padding:11px;border-radius:11px}
+.presentation{background:#fff9e8;border:1px solid #e8d18d;border-radius:18px;padding:18px;margin-top:18px}
+.presentation ul{line-height:1.7}.timer-box{font-weight:900;color:#1976d2}
+.extra-feedback{margin-top:12px;padding:13px;border-radius:11px;background:#edf9f1;border:1px solid #b7dfc3;display:none}
+@media(max-width:700px){.activity-grid{grid-template-columns:1fr}.matrix{grid-template-columns:1fr}}
+
+/* ===== BANCO AMPLIADO DE EJERCICIOS ===== */
+.exercise-bank{margin-top:22px}.exercise-bank-title{background:#eef6ff;border-left:5px solid #1976d2;padding:16px 18px;border-radius:14px}
+.exercise-bank-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
+.eb-card{background:#fff;border:1px solid #d6e3ed;border-radius:18px;padding:18px;box-shadow:0 8px 22px rgba(18,52,90,.07)}
+.eb-tag{font-size:12px;font-weight:900;letter-spacing:.06em;color:#1976d2}.eb-card h4{margin:7px 0}
+.eb-card button{border:0;border-radius:10px;padding:11px 14px;font-weight:900;cursor:pointer;background:#1976d2;color:#fff;margin-top:8px}
+.eb-content{display:none;margin-top:12px}.eb-content.open{display:block}
+.eb-opt{display:block;width:100%;text-align:left;background:#f8fbfe!important;color:#17324d!important;border:1px solid #d4e1ea!important;margin:7px 0!important}
+.eb-opt.ok{background:#eaf8ef!important;border-color:#8bc9a0!important}.eb-opt.no{background:#fff0f0!important;border-color:#dfa0a0!important}
+.eb-feedback{display:none;margin-top:10px;padding:12px;border-radius:11px;background:#eef9f1;border:1px solid #acd6b9}
+.order-list{display:grid;gap:7px}.order-item{background:#fff;border:1px solid #d5e2eb;padding:10px;border-radius:10px;cursor:pointer}.order-item.selected{background:#dfeeff;border-color:#1976d2}
+.case-table{width:100%;border-collapse:collapse;margin:10px 0}.case-table th,.case-table td{border:1px solid #d8e4ec;padding:8px;text-align:left}.case-table th{background:#edf5fb}
+@media(max-width:700px){.exercise-bank-grid{grid-template-columns:1fr}}
+</style>
+
+<style>
+.scorebox{display:block!important}
 </style>
 </head>
 <body>
@@ -378,8 +415,32 @@ function speak(text){
 }
 function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel()}
 
+
+/* ===== PUNTAJE: INICIA EN 0 Y SE REINICIA CADA 24 HORAS ===== */
+const SCORE_STORAGE_KEY = "simulacion_enfermeria_score_v1";
+const SCORE_TIME_KEY = "simulacion_enfermeria_score_time_v1";
+
+function resetScoreIf24Hours(){
+  const savedTime = Number(localStorage.getItem(SCORE_TIME_KEY) || 0);
+  const now = Date.now();
+  if(!savedTime || (now - savedTime) >= 24*60*60*1000){
+    localStorage.setItem(SCORE_STORAGE_KEY, "0");
+    localStorage.setItem(SCORE_TIME_KEY, String(now));
+    return 0;
+  }
+  return Number(localStorage.getItem(SCORE_STORAGE_KEY) || 0);
+}
+function saveScore(){
+  localStorage.setItem(SCORE_STORAGE_KEY, String(score));
+  if(!localStorage.getItem(SCORE_TIME_KEY)) localStorage.setItem(SCORE_TIME_KEY, String(Date.now()));
+}
+function getDailyScore(){
+  return resetScoreIf24Hours();
+}
+
 function startCase(id){
- stopSpeech(); current=cases[id];idx=0;score=0;answered=false;
+ stopSpeech();
+ resetScoreIf24Hours(); current=cases[id];idx=0;score=getDailyScore();answered=false;
  document.getElementById('home').classList.add('hidden');
  render();
  window.scrollTo({top:0,behavior:'smooth'});
@@ -476,12 +537,12 @@ function renderStep(s){
  if(s.type==='final'){
   const max=current.steps.filter(x=>x.type==='q').length*2 + current.steps.filter(x=>x.type==='analysis').length*3;
   const pct=Math.round(score/max*100);
-  return `<div class="final"><div class="kicker">Simulación completada</div><h2>¡Caso finalizado!</h2><div class="bigscore">${score}/${max}</div>
+  return `<div class="final"><div class="kicker">Simulación completada</div><h2>¡Caso finalizado!</h2><div class="bigscore">✓</div>
   <p>${pct>=80?'Excelente razonamiento clínico.':'Buen trabajo. Revise las decisiones en las que perdió puntos y prepare la sustentación.'}</p>
   <div class="card" style="color:#17324d;text-align:left;margin-top:18px"><h3>🎤 Preparación para la sustentación</h3>
   <p>Explique: <b>1)</b> qué paciente o situación priorizó, <b>2)</b> qué datos clínicos sustentan su decisión, <b>3)</b> qué riesgos identificó, <b>4)</b> cuál es la primera intervención de Enfermería, <b>5)</b> a quién comunicaría y <b>6)</b> cómo haría el escalamiento.</p>
   <p><b>Pregunta de pensamiento crítico:</b> si un paciente tiene más dolor pero otro presenta signos de compromiso hemodinámico, ¿por qué la intensidad del dolor no determina por sí sola la prioridad?</p></div>
-  <div id="wordSearchExercise" class="ws-wrap"></div><button class="start" onclick="backHome()">Elegir otro caso</button></div>`;
+  <div id="wordSearchExercise" class="ws-wrap"></div><div id="extraActivities"></div><div id="exerciseBank"></div><button class="start" onclick="backHome()">Elegir otro caso</button></div>`;
  }
  if(step.type==='final'){setTimeout(wsBuild,20);}
 }
@@ -491,8 +552,8 @@ function answer(i){
  const s=current.steps[idx], correct=s.opts[i][1];
  document.querySelectorAll('.option').forEach(b=>b.classList.add('lock'));
  const f=document.getElementById('feedback');
- if(correct){score+=2;f.className='feedback good';f.innerHTML='✅ <b>Decisión adecuada.</b> '+s.explain;speak('Decisión adecuada. '+s.explain)}
- else{f.className='feedback bad';f.innerHTML='⚠️ <b>Revise el razonamiento.</b> '+s.explain;speak('Revise el razonamiento. '+s.explain)}
+ if(correct){score+=2;saveScore();f.className='feedback good';f.innerHTML='✅ <b>Decisión adecuada.</b> '+s.explain;speak('Decisión adecuada. '+s.explain)}
+ else{saveScore();f.className='feedback bad';f.innerHTML='⚠️ <b>Revise el razonamiento.</b> '+s.explain;speak('Revise el razonamiento. '+s.explain)}
  f.style.display='block';document.getElementById('next').style.display='inline-block';
  document.querySelector('.scorebox').textContent='⭐ '+score+' puntos';
 }
@@ -576,7 +637,9 @@ function wsBuild(){
  <div id="wsResult" class="ws-result"></div>
  <div id="wsPhrase" class="ws-hiddenphrase"><div>🔓 FRASE OCULTA</div><div class="phrase">${d.phrase}</div><div>Ahora explique qué significa en este caso.</div></div>
  <div id="wsAnalysis" class="ws-analysis hidden"><b>🎤 Mini-sustentación</b><p>Escriba en 2–3 líneas: ¿cómo se relaciona la frase con las decisiones clínicas que tomó?</p><textarea id="wsAnswer" placeholder="Escriba aquí su análisis..."></textarea><button onclick="wsSubmitAnalysis()">Enviar análisis</button><div id="wsAnalysisResult"></div></div>`;
-}
+
+ renderExtraActivities();
+ renderExerciseBank();}
 function wsSelect(r,c){
  if(!wsState)return;
  const cell=document.querySelector(`.ws-cell[data-r="${r}"][data-c="${c}"]`);
@@ -613,6 +676,211 @@ function wsSubmitAnalysis(){
  if(t.length<25){r.innerHTML="⚠️ Desarrolle un poco más la explicación antes de enviarla.";return}
  r.innerHTML="✅ <b>Análisis registrado en pantalla.</b> Ahora sustente oralmente su respuesta ante la docente.";
  speak("Análisis registrado. Ahora sustente oralmente su respuesta ante la docente.");
+}
+
+
+/* ===== ACTIVIDADES ADICIONALES ===== */
+function renderExtraActivities(){
+ const holder=document.getElementById("extraActivities"); if(!holder)return;
+ const isArias=current===cases.arias;
+ holder.innerHTML=`
+ <div class="route-title">
+   <div class="kicker">Ruta de aprendizaje · 90 minutos sugeridos</div>
+   <h3>🎓 Cuatro actividades para ${current.name}</h3>
+   <p>La simulación principal ya realizada es la <b>Actividad 1</b>. Ahora continúe con tres retos adicionales. La docente puede utilizar las respuestas para la sustentación y la presentación final.</p>
+ </div>
+
+ <div class="activity-grid">
+   <article class="activity-card">
+    <span class="activity-number">2</span>
+    <h4>🧩 Caso corto: toma de decisiones</h4>
+    <p>${isArias?'Un paciente postoperatorio presenta un cambio súbito en su estado general.':'Un paciente postoperatorio inicialmente estable presenta nuevos síntomas durante la vigilancia.'}</p>
+    <button class="start" onclick="toggleMiniCase()">Abrir caso corto →</button>
+    <div id="miniCase" class="mini-case">
+      <b>Escenario:</b> ${isArias?'Durante la ronda observa mayor sangrado y el paciente refiere debilidad.':'Durante la ronda el paciente refiere mayor incomodidad y aparecen nuevos cambios respecto a la valoración inicial.'}
+      <h4>¿Cuál es el análisis más completo?</h4>
+      <button class="mini-option" onclick="miniAnswer(this,${isArias?'true':'true'})">A. Comparar con los datos previos, reevaluar, identificar signos de alarma y decidir si requiere escalamiento.</button>
+      <button class="mini-option" onclick="miniAnswer(this,false)">B. Ignorar el cambio porque el paciente estaba estable al inicio.</button>
+      <button class="mini-option" onclick="miniAnswer(this,false)">C. Atender solamente el síntoma que el paciente menciona.</button>
+      <button class="mini-option" onclick="miniAnswer(this,false)">D. Esperar hasta el final del turno para comparar los datos.</button>
+      <div id="miniFeedback" class="extra-feedback"></div>
+    </div>
+   </article>
+
+   <article class="activity-card">
+    <span class="activity-number">3</span>
+    <h4>🎯 Matriz de priorización</h4>
+    <p>Seleccione los <b>tres criterios</b> que deben pesar más al priorizar un paciente en este ejercicio.</p>
+    <div class="matrix" id="matrixChoices">
+      <button onclick="matrixPick(this)">Riesgo vital</button>
+      <button onclick="matrixPick(this)">Estabilidad clínica</button>
+      <button onclick="matrixPick(this)">Signos de deterioro</button>
+      <button onclick="matrixPick(this)">Intensidad del dolor aislada</button>
+      <button onclick="matrixPick(this)">Antigüedad de la cirugía</button>
+      <button onclick="matrixPick(this)">Preferencia del paciente</button>
+    </div>
+    <button class="start" onclick="checkMatrix()">Comprobar análisis</button>
+    <div id="matrixFeedback" class="extra-feedback"></div>
+   </article>
+
+   <article class="activity-card">
+    <span class="activity-number">4</span>
+    <h4>🧠 Reto de pensamiento crítico</h4>
+    <p>Explique con sus propias palabras por qué una valoración inicial normal no significa que el paciente pueda dejar de vigilarse.</p>
+    <div class="text-task"><textarea id="criticalAnswer" placeholder="Escriba aquí su razonamiento..."></textarea></div>
+    <button class="start" onclick="checkCritical()">Enviar razonamiento →</button>
+    <div id="criticalFeedback" class="extra-feedback"></div>
+   </article>
+
+   <article class="activity-card">
+    <span class="activity-number">5</span>
+    <h4>🎤 Preparación de la presentación</h4>
+    <p>Prepare una presentación en PowerPoint para sustentar el caso. La presentación debe demostrar análisis, no copiar el texto de la página.</p>
+    <div class="checklist">
+      <label class="checkline"><input type="checkbox"> Portada: nombre del estudiante y caso asignado.</label>
+      <label class="checkline"><input type="checkbox"> Contexto y valoración inicial.</label>
+      <label class="checkline"><input type="checkbox"> Priorización y datos que la sustentan.</label>
+      <label class="checkline"><input type="checkbox"> Evolución del paciente y cambios relevantes.</label>
+      <label class="checkline"><input type="checkbox"> ABCDE y signos de alarma.</label>
+      <label class="checkline"><input type="checkbox"> Comunicación y escalamiento.</label>
+      <label class="checkline"><input type="checkbox"> Reflexión: ¿qué habría pasado si se retrasaba la atención?</label>
+      <label class="checkline"><input type="checkbox"> Conclusiones y tres aprendizajes.</label>
+    </div>
+    <div class="presentation"><b>📽️ Estructura sugerida:</b> 8–10 diapositivas · exposición individual · explicar cada decisión con datos clínicos · responder preguntas de la docente.</div>
+   </article>
+ </div>
+ <div class="notice" style="margin-top:18px"><b>⏱️ Tiempo sugerido:</b> 90 minutos por caso: simulación principal 35–40 min, ejercicios adicionales 25–30 min y preparación/análisis de PowerPoint 20–25 min. El tiempo es orientativo y puede ajustarse por la docente.</div>`;
+}
+function toggleMiniCase(){
+ const e=document.getElementById("miniCase");if(e)e.style.display=e.style.display==="block"?"none":"block";
+}
+function miniAnswer(btn,ok){
+ document.querySelectorAll("#miniCase .mini-option").forEach(x=>x.disabled=true);
+ btn.classList.add(ok?"ok":"no");
+ const f=document.getElementById("miniFeedback");f.style.display="block";
+ f.innerHTML=ok?"✅ <b>Análisis adecuado.</b> La clave es comparar la evolución con los datos previos, reevaluar y reconocer signos de alarma antes de decidir el escalamiento.":"⚠️ <b>Revise el razonamiento.</b> El cambio clínico exige comparación con los datos previos y una nueva valoración.";
+}
+function matrixPick(btn){
+ btn.classList.toggle("active");
+}
+function checkMatrix(){
+ const selected=[...document.querySelectorAll("#matrixChoices button.active")].map(x=>x.textContent);
+ const correct=["Riesgo vital","Estabilidad clínica","Signos de deterioro"];
+ const f=document.getElementById("matrixFeedback");f.style.display="block";
+ const ok=selected.length===3 && correct.every(x=>selected.includes(x));
+ f.innerHTML=ok?"✅ <b>Priorización correcta.</b> Estos tres criterios corresponden al enfoque central del ejercicio.":"⚠️ <b>Revise la selección.</b> Debe escoger exactamente tres: riesgo vital, estabilidad clínica y signos de deterioro.";
+}
+function checkCritical(){
+ const t=(document.getElementById("criticalAnswer")||{}).value?.trim()||"",f=document.getElementById("criticalFeedback");f.style.display="block";
+ if(t.length<60){f.innerHTML="⚠️ Amplíe su análisis. Relacione la valoración inicial con la posibilidad de cambios posteriores y la necesidad de vigilancia."}
+ else{f.innerHTML="✅ <b>Respuesta recibida.</b> Ahora prepare una explicación oral de su razonamiento para la sustentación."}
+}
+
+
+/* ===== BANCO AMPLIADO: 8 RETOS ADICIONALES ===== */
+function renderExerciseBank(){
+ const h=document.getElementById("exerciseBank");if(!h)return;
+ const A=current===cases.arias;
+ h.innerHTML=`
+ <div class="exercise-bank-title"><div class="kicker">BANCO DE ACTIVIDADES · NIVEL AVANZADO</div><h3>🧠 Más retos para profundizar el caso</h3><p>Estas actividades complementan la simulación principal. La estudiante debe analizar, comparar, justificar y comunicar sus decisiones.</p></div>
+ <div class="exercise-bank-grid">
+  <article class="eb-card"><div class="eb-tag">RETO 6 · TRIAGE</div><h4>🚦 ¿Quién va primero?</h4><p>Ordene estos cuatro escenarios del más urgente al menos urgente.</p>
+   <div class="order-list" id="triageList">
+    <div class="order-item" onclick="triagePick(this)">Paciente con sangrado activo y signos de compromiso hemodinámico.</div>
+    <div class="order-item" onclick="triagePick(this)">Paciente estable con dolor postoperatorio moderado.</div>
+    <div class="order-item" onclick="triagePick(this)">Paciente ansioso que no comprende completamente las indicaciones.</div>
+    <div class="order-item" onclick="triagePick(this)">Paciente con náuseas, signos vitales estables y consciente.</div>
+   </div><button onclick="checkTriage()">Comprobar orden</button><div id="triageFeedback" class="eb-feedback"></div>
+  </article>
+
+  <article class="eb-card"><div class="eb-tag">RETO 7 · ABCDE</div><h4>🩺 Detecte la prioridad</h4><p>Seleccione todos los datos que deberían aumentar su preocupación en un paciente postoperatorio.</p>
+   <button class="eb-opt" data-correct="1" onclick="toggleOpt(this)">PA 80/48 mmHg</button>
+   <button class="eb-opt" data-correct="1" onclick="toggleOpt(this)">FC 126 lpm</button>
+   <button class="eb-opt" data-correct="1" onclick="toggleOpt(this)">Mayor palidez y sensación de desmayo</button>
+   <button class="eb-opt" data-correct="0" onclick="toggleOpt(this)">Herida limpia y seca</button>
+   <button onclick="checkMulti(this)">Comprobar selección</button><div class="eb-feedback"></div>
+  </article>
+
+  <article class="eb-card"><div class="eb-tag">RETO 8 · COMPARACIÓN</div><h4>📊 Antes vs. después</h4>
+   <table class="case-table"><tr><th>Dato</th><th>Inicial</th><th>Evolución</th></tr>
+   <tr><td>Presión arterial</td><td>88/54</td><td>80/48</td></tr><tr><td>Frecuencia cardiaca</td><td>118</td><td>126</td></tr></table>
+   <p><b>Pregunta:</b> ¿Qué interpretación integra mejor ambos cambios?</p>
+   <button class="eb-opt" data-correct="1" onclick="singleOpt(this)">Existe un deterioro clínico que requiere reevaluación y escalamiento oportuno.</button>
+   <button class="eb-opt" data-correct="0" onclick="singleOpt(this)">Los cambios no son relevantes porque ambos valores son números cercanos.</button>
+   <button class="eb-opt" data-correct="0" onclick="singleOpt(this)">Solo debe considerarse el dolor.</button>
+   <div class="eb-feedback"></div>
+  </article>
+
+  <article class="eb-card"><div class="eb-tag">RETO 9 · COMUNICACIÓN</div><h4>📞 ¿Qué comunicar?</h4><p>Construya mentalmente un reporte breve. ¿Cuál información no debería faltar?</p>
+   <button class="eb-opt" data-correct="1" onclick="toggleOpt(this)">Cambios actuales y signos vitales relevantes.</button>
+   <button class="eb-opt" data-correct="1" onclick="toggleOpt(this)">Hallazgos y evolución respecto a la valoración previa.</button>
+   <button class="eb-opt" data-correct="1" onclick="toggleOpt(this)">Nivel de urgencia y solicitud de ayuda según el protocolo.</button>
+   <button class="eb-opt" data-correct="0" onclick="toggleOpt(this)">Una opinión sin datos clínicos.</button>
+   <button onclick="checkMulti(this)">Comprobar reporte</button><div class="eb-feedback"></div>
+  </article>
+
+  <article class="eb-card"><div class="eb-tag">RETO 10 · ERROR CLÍNICO</div><h4>⚠️ Encuentre el error</h4><p>Una estudiante dice: “Como el paciente C refiere poco dolor, puedo atender primero a otro paciente con dolor 5/10”. ¿Qué falla en ese razonamiento?</p>
+   <button class="eb-opt" data-correct="1" onclick="singleOpt(this)">Confunde intensidad del dolor con prioridad y omite los signos de compromiso hemodinámico.</button>
+   <button class="eb-opt" data-correct="0" onclick="singleOpt(this)">El problema es únicamente que el dolor está mal medido.</button>
+   <button class="eb-opt" data-correct="0" onclick="singleOpt(this)">No existe ningún error.</button>
+   <div class="eb-feedback"></div>
+  </article>
+
+  <article class="eb-card"><div class="eb-tag">RETO 11 · DECISIÓN</div><h4>🧩 ¿Qué dato falta?</h4><p>Antes de cerrar su análisis, escriba qué información adicional considera necesaria para completar la valoración.</p>
+   <textarea id="missingData" style="width:100%;min-height:110px;border:1px solid #ccdbe6;border-radius:11px;padding:12px;font:inherit" placeholder="Escriba los datos que buscaría y explique por qué..."></textarea>
+   <button onclick="checkTextTask('missingData','missingFeedback')">Enviar análisis</button><div id="missingFeedback" class="eb-feedback"></div>
+  </article>
+
+  <article class="eb-card"><div class="eb-tag">RETO 12 · REFLEXIÓN</div><h4>💭 ¿Qué habría pasado si…?</h4><p>Analice el escenario: ¿qué consecuencias podría tener retrasar la atención de un paciente que presenta signos de deterioro?</p>
+   <textarea id="delayAnalysis" style="width:100%;min-height:110px;border:1px solid #ccdbe6;border-radius:11px;padding:12px;font:inherit" placeholder="Construya una respuesta con causa → riesgo → acción..."></textarea>
+   <button onclick="checkTextTask('delayAnalysis','delayFeedback')">Enviar análisis</button><div id="delayFeedback" class="eb-feedback"></div>
+  </article>
+
+  <article class="eb-card"><div class="eb-tag">RETO 13 · SUSTENTACIÓN</div><h4>🎤 Pregunta sorpresa de la docente</h4><p>Seleccione una pregunta y prepárese para responderla oralmente sin leer la página.</p>
+   <button onclick="randomQuestion()">🎲 Generar pregunta</button><div id="surpriseQuestion" class="eb-content"></div>
+  </article>
+ </div>`;
+}
+function triagePick(el){
+ const list=document.getElementById("triageList");
+ if(el.classList.contains("selected")){el.classList.remove("selected");return}
+ el.classList.add("selected");
+}
+function checkTriage(){
+ const list=[...document.querySelectorAll("#triageList .order-item")],sel=list.filter(x=>x.classList.contains("selected")),f=document.getElementById("triageFeedback");
+ f.style.display="block";
+ if(sel.length!==4){f.innerHTML="⚠️ Seleccione los cuatro escenarios y ordénelos mentalmente antes de comprobar.";return}
+ f.innerHTML="✅ <b>Análisis esperado:</b> el escenario con sangrado activo y signos de compromiso hemodinámico debe ocupar la primera prioridad. La decisión se sustenta en riesgo vital, estabilidad y deterioro, no solamente en dolor.";
+}
+function toggleOpt(btn){btn.classList.toggle("active");btn.classList.toggle("selected")}
+function checkMulti(btn){
+ const card=btn.closest(".eb-card"),opts=[...card.querySelectorAll(".eb-opt")],f=card.querySelector(".eb-feedback");
+ const chosen=opts.filter(x=>x.classList.contains("selected")),correct=opts.filter(x=>x.dataset.correct==="1");
+ f.style.display="block";
+ const ok=chosen.length===correct.length&&chosen.every(x=>x.dataset.correct==="1");
+ f.innerHTML=ok?"✅ <b>Correcto.</b> La selección integra datos clínicos y razonamiento.":"⚠️ <b>Revise.</b> No seleccione por intuición: relacione cada dato con el riesgo, la evolución y la prioridad.";
+}
+function singleOpt(btn){
+ const card=btn.closest(".eb-card"),opts=[...card.querySelectorAll(".eb-opt")],f=card.querySelector(".eb-feedback");
+ opts.forEach(x=>x.disabled=true);btn.classList.add(btn.dataset.correct==="1"?"ok":"no");f.style.display="block";
+ f.innerHTML=btn.dataset.correct==="1"?"✅ <b>Respuesta adecuada.</b> Ahora explique por qué con datos del caso.":"⚠️ Revise el razonamiento y vuelva a leer los cambios clínicos.";
+}
+function checkTextTask(inputId,feedbackId){
+ const t=document.getElementById(inputId).value.trim(),f=document.getElementById(feedbackId);f.style.display="block";
+ f.innerHTML=t.length>=80?"✅ <b>Análisis registrado.</b> La respuesta debe defenderse oralmente durante la sustentación.":"⚠️ Escriba un análisis más desarrollado, conectando datos clínicos con riesgos y decisiones.";
+}
+function randomQuestion(){
+ const qs=[
+  "¿Qué dato clínico fue decisivo para priorizar y por qué?",
+  "¿Qué cambio le haría modificar inmediatamente su prioridad?",
+  "¿Qué información comunicaría primero al equipo y por qué?",
+  "¿Cómo diferencia una molestia esperable de un signo de alarma?",
+  "¿Qué componente del ABCDE considera más relevante en este escenario y por qué?",
+  "¿Qué error de razonamiento podría cometer una persona que se fija solamente en el dolor?",
+  "¿Qué debería reevaluar después de una intervención inicial?"
+ ];
+ const q=qs[Math.floor(Math.random()*qs.length)],d=document.getElementById("surpriseQuestion");d.classList.add("open");d.innerHTML="<b>🎤 Pregunta:</b> "+q;
+ speak(q);
 }
 
 window.addEventListener('beforeunload',stopSpeech);
