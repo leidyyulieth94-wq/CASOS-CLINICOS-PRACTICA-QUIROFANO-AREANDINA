@@ -4,20 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simulación Clínica · Enfermería</title>
+<title>Simulación Clínica Interactiva · Enfermería</title>
 
 <style>
 :root{
   --azul:#123a5a;
   --azul2:#1976d2;
   --azul3:#0d47a1;
-  --celeste:#eaf4ff;
+  --fondo:#eef6ff;
   --verde:#18864b;
-  --rojo:#c62828;
-  --amarillo:#f5a623;
-  --gris:#64748b;
-  --blanco:#ffffff;
-  --borde:#d9e3ee;
+  --rojo:#d64550;
+  --amarillo:#e6a719;
+  --texto:#17324d;
+  --gris:#64788a;
+  --linea:#d9e5ef;
+  --blanco:#fff;
   --sombra:0 12px 35px rgba(18,58,90,.12);
 }
 
@@ -27,40 +28,59 @@
 
 body{
   margin:0;
-  font-family:Arial,Segoe UI,sans-serif;
-  background:linear-gradient(135deg,#eef7ff,#f7fbff);
-  color:#17324d;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#f7fbff,#eaf4fc);
+  color:var(--texto);
 }
 
 button{
-  font-family:inherit;
+  font:inherit;
 }
 
 .topbar{
+  height:64px;
   background:white;
-  border-bottom:1px solid var(--borde);
-  padding:15px 6%;
+  border-bottom:1px solid var(--linea);
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
+  padding:0 6%;
   position:sticky;
   top:0;
   z-index:100;
 }
 
-.logo{
+.brand{
   font-weight:900;
   font-size:18px;
-  color:var(--azul);
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
-.voice-controls button{
-  background:white;
-  border:1px solid var(--borde);
-  border-radius:12px;
-  padding:10px 15px;
-  cursor:pointer;
+.brand-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:var(--azul2);
+  color:white;
+  display:grid;
+  place-items:center;
   font-weight:bold;
+}
+
+.top-actions{
+  display:flex;
+  gap:8px;
+}
+
+.small-btn{
+  border:1px solid var(--linea);
+  background:white;
+  padding:9px 15px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
 }
 
 .container{
@@ -70,12 +90,24 @@ button{
 }
 
 .hero{
-  background:linear-gradient(135deg,#123a5a,#246fa5);
+  background:linear-gradient(135deg,#123a5a,#236b9e);
   color:white;
   border-radius:28px;
-  padding:42px;
+  padding:38px;
   box-shadow:var(--sombra);
-  margin-bottom:22px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero:after{
+  content:"";
+  position:absolute;
+  width:330px;
+  height:330px;
+  border:65px solid rgba(255,255,255,.08);
+  border-radius:50%;
+  right:-100px;
+  top:-130px;
 }
 
 .hero small{
@@ -84,163 +116,173 @@ button{
 }
 
 .hero h1{
-  font-size:46px;
-  margin:12px 0;
+  font-size:42px;
+  margin:14px 0;
 }
 
 .hero p{
-  max-width:850px;
+  max-width:800px;
   line-height:1.7;
 }
 
 .badges{
   display:flex;
-  flex-wrap:wrap;
   gap:10px;
-  margin-top:22px;
+  flex-wrap:wrap;
+  margin-top:20px;
 }
 
 .badge{
   background:rgba(255,255,255,.15);
   padding:10px 14px;
   border-radius:999px;
-  font-weight:bold;
+  font-weight:700;
+  font-size:13px;
+}
+
+.scorebar{
+  margin:20px 0;
+  background:white;
+  border:1px solid var(--linea);
+  border-radius:18px;
+  padding:15px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:var(--sombra);
+}
+
+.score{
+  font-size:22px;
+  font-weight:900;
+}
+
+.timer{
+  font-weight:900;
+  color:var(--azul2);
 }
 
 .cases{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(2,1fr);
   gap:20px;
+  margin-top:20px;
 }
 
 .case-card{
   background:white;
-  border:1px solid var(--borde);
-  border-radius:25px;
-  padding:28px;
+  border:1px solid var(--linea);
+  border-radius:24px;
+  padding:25px;
   box-shadow:var(--sombra);
   transition:.2s;
 }
 
 .case-card:hover{
-  transform:translateY(-4px);
+  transform:translateY(-5px);
 }
 
-.character{
+.avatar{
   font-size:65px;
-  margin-bottom:8px;
+  margin-bottom:10px;
 }
 
 .level{
   font-size:12px;
   font-weight:900;
   letter-spacing:.1em;
+  margin-bottom:8px;
 }
 
-.high{
-  color:#d32f2f;
+.level.red{
+  color:#d64550;
 }
 
-.medium{
-  color:#d28a00;
+.level.yellow{
+  color:#d99500;
 }
 
 .case-card h2{
   margin:8px 0;
-  color:var(--azul);
+  font-size:24px;
 }
 
 .case-card p{
-  color:#5c7185;
-  line-height:1.5;
+  color:var(--gris);
+  line-height:1.55;
 }
 
-.btn{
+.main-btn{
+  width:100%;
   border:0;
-  border-radius:13px;
-  padding:14px 20px;
-  font-weight:900;
-  cursor:pointer;
-}
-
-.btn-primary{
   background:var(--azul2);
   color:white;
-  width:100%;
+  padding:15px 18px;
+  border-radius:13px;
+  cursor:pointer;
+  font-weight:900;
+  margin-top:15px;
 }
 
-.btn-secondary{
-  background:#edf5ff;
-  color:var(--azul);
+.main-btn:hover{
+  background:var(--azul3);
 }
 
 .hidden{
   display:none!important;
 }
 
-.sim{
+.simulation{
+  margin-top:25px;
+}
+
+.panel{
   background:white;
-  border-radius:25px;
+  border:1px solid var(--linea);
+  border-radius:24px;
+  padding:28px;
   box-shadow:var(--sombra);
-  overflow:hidden;
-}
-
-.sim-header{
-  background:var(--azul);
-  color:white;
-  padding:25px 30px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-}
-
-.score{
-  background:white;
-  color:var(--azul);
-  border-radius:15px;
-  padding:10px 16px;
-  font-weight:900;
-  white-space:nowrap;
-}
-
-.progress{
-  height:8px;
-  background:#dfeaf4;
-}
-
-.progress-bar{
-  height:100%;
-  background:var(--azul2);
-  width:0%;
-  transition:.3s;
-}
-
-.sim-body{
-  padding:30px;
-}
-
-.dialogue{
-  background:#f4f8fc;
-  border:1px solid var(--borde);
-  border-radius:20px;
-  padding:20px;
   margin-bottom:20px;
 }
 
-.person{
+.patient-header{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  border-bottom:1px solid var(--linea);
+  padding-bottom:20px;
+}
+
+.patient-avatar{
+  font-size:75px;
+}
+
+.patient-name{
+  font-size:26px;
   font-weight:900;
-  color:var(--azul2);
-  margin-bottom:8px;
 }
 
-.dialogue p{
-  line-height:1.65;
-  margin:0;
+.dialogue{
+  background:#f4f9fd;
+  border:1px solid #d9e8f2;
+  border-radius:20px;
+  padding:22px;
+  margin:20px 0;
 }
 
-.dialogue button{
-  margin-top:14px;
+.dialogue-title{
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.speak-btn{
+  border:0;
+  background:#e8f1ff;
+  color:#145ca0;
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:800;
 }
 
 .vitals{
@@ -251,139 +293,143 @@ button{
 }
 
 .vital{
-  background:#f7fafc;
-  border-radius:15px;
-  padding:16px;
-  border:1px solid var(--borde);
+  background:#f6f8fa;
+  border-radius:14px;
+  padding:15px;
+}
+
+.vital span{
+  display:block;
+  color:var(--gris);
+  font-size:13px;
 }
 
 .vital strong{
-  display:block;
-  font-size:23px;
-  margin-top:5px;
+  font-size:22px;
 }
 
 .question{
-  border-top:1px solid var(--borde);
-  padding-top:25px;
   margin-top:25px;
 }
 
 .question h3{
-  line-height:1.5;
-}
-
-.options{
-  display:grid;
-  gap:12px;
+  font-size:21px;
 }
 
 .option{
+  display:block;
   width:100%;
   text-align:left;
+  padding:15px 18px;
+  margin:10px 0;
   background:white;
-  border:2px solid var(--borde);
-  padding:16px;
-  border-radius:14px;
+  border:2px solid var(--linea);
+  border-radius:13px;
   cursor:pointer;
-  transition:.2s;
+  transition:.15s;
 }
 
 .option:hover{
   border-color:var(--azul2);
-  background:#f4f9ff;
+  background:#f5faff;
 }
 
 .option.correct{
-  border-color:var(--verde);
-  background:#e9f8ef;
+  border-color:#18864b;
+  background:#eaf8f0;
 }
 
 .option.wrong{
-  border-color:var(--rojo);
-  background:#ffeded;
+  border-color:#d64550;
+  background:#fff0f1;
 }
 
 .feedback{
   margin-top:15px;
   padding:15px;
-  border-radius:14px;
-  background:#f5f8fb;
+  border-radius:13px;
+  background:#f5f8fa;
   line-height:1.6;
 }
 
-.actions{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  margin-top:25px;
-}
-
-.result{
-  text-align:center;
-  padding:35px;
-}
-
-.result-score{
-  font-size:60px;
-  font-weight:900;
-  color:var(--azul2);
-}
-
-.download{
+.next-btn{
+  border:0;
   background:var(--verde);
   color:white;
+  padding:13px 20px;
+  border-radius:12px;
+  font-weight:900;
+  cursor:pointer;
   margin-top:15px;
 }
 
-.analysis{
-  margin-top:30px;
-  background:#fffaf0;
-  border:1px solid #f1d79a;
-  border-radius:20px;
-  padding:25px;
-}
-
-.analysis h3{
-  margin-top:0;
-}
-
-.analysis textarea{
-  width:100%;
-  min-height:150px;
-  border:1px solid var(--borde);
+.back-btn{
+  border:1px solid var(--linea);
+  background:white;
+  padding:12px 18px;
   border-radius:12px;
-  padding:15px;
-  resize:vertical;
-  font-family:inherit;
+  font-weight:800;
+  cursor:pointer;
 }
 
-.wordgame{
-  margin-top:30px;
-  background:#f4f8ff;
-  border-radius:20px;
-  padding:25px;
-}
-
-.wordgame-grid{
-  display:grid;
-  grid-template-columns:repeat(10,35px);
-  gap:4px;
-  justify-content:center;
+.progress{
+  height:10px;
+  background:#e7eef4;
+  border-radius:999px;
+  overflow:hidden;
   margin:20px 0;
 }
 
-.letter{
-  height:35px;
-  width:35px;
-  border:1px solid #cddbea;
-  background:white;
-  border-radius:6px;
-  display:flex;
-  align-items:center;
+.progress-bar{
+  height:100%;
+  background:var(--azul2);
+  width:0%;
+  transition:.3s;
+}
+
+.analysis-box{
+  background:#fffaf0;
+  border:1px solid #f2dfad;
+  border-radius:18px;
+  padding:20px;
+  margin-top:20px;
+}
+
+textarea{
+  width:100%;
+  min-height:130px;
+  resize:vertical;
+  border:1px solid var(--linea);
+  border-radius:13px;
+  padding:14px;
+  font:inherit;
+}
+
+.wordsearch{
+  overflow:auto;
+  background:#f8fbfd;
+  padding:18px;
+  border-radius:18px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(12,30px);
+  gap:4px;
   justify-content:center;
-  font-weight:bold;
+}
+
+.letter{
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  background:white;
+  border:1px solid #d6e2eb;
+  border-radius:5px;
+  font-weight:900;
   cursor:pointer;
+  user-select:none;
 }
 
 .letter.selected{
@@ -391,10 +437,42 @@ button{
   color:white;
 }
 
+.words{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:15px;
+}
+
+.word{
+  background:#eaf3fb;
+  padding:8px 12px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:13px;
+}
+
+.result{
+  text-align:center;
+  padding:35px;
+}
+
+.result .big{
+  font-size:60px;
+}
+
+.download-area{
+  background:#eef8f2;
+  border:1px solid #c9e8d5;
+  border-radius:18px;
+  padding:20px;
+  margin-top:20px;
+}
+
 footer{
   text-align:center;
+  color:#718597;
   padding:30px;
-  color:#718096;
 }
 
 @media(max-width:800px){
@@ -402,17 +480,16 @@ footer{
     grid-template-columns:1fr;
   }
 
-  .hero h1{
-    font-size:34px;
-  }
-
   .vitals{
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:repeat(2,1fr);
   }
 
-  .sim-header{
-    flex-direction:column;
-    align-items:flex-start;
+  .hero h1{
+    font-size:32px;
+  }
+
+  .topbar{
+    padding:0 15px;
   }
 }
 </style>
@@ -421,240 +498,126 @@ footer{
 <body>
 
 <header class="topbar">
-  <div class="logo">⚕️ Simulación Clínica · Enfermería</div>
+  <div class="brand">
+    <div class="brand-icon">+</div>
+    Simulación Clínica · Enfermería
+  </div>
 
-  <div class="voice-controls">
-    <button onclick="activarVoz()">🔊 Voz</button>
-    <button onclick="silenciarVoz()">🔇 Silenciar</button>
+  <div class="top-actions">
+    <button class="small-btn" onclick="toggleVoice()">🔊 Voz</button>
+    <button class="small-btn" onclick="toggleVoice()">🔇 Silenciar</button>
   </div>
 </header>
 
 <main class="container">
 
-<section id="home">
+<section class="hero">
+  <small>PRÁCTICA VIRTUAL · PRIORIZACIÓN QUIRÚRGICA</small>
 
-  <div class="hero">
-    <small>PRÁCTICA VIRTUAL · PRIORIZACIÓN QUIRÚRGICA</small>
+  <h1>Casos clínicos interactivos</h1>
 
-    <h1>Casos clínicos interactivos</h1>
+  <p>
+    Simulación educativa para fortalecer valoración, razonamiento clínico,
+    priorización, comunicación, seguridad del paciente y toma de decisiones
+    de enfermería.
+  </p>
 
-    <p>
-      Simulación educativa para fortalecer valoración,
-      razonamiento clínico, priorización, comunicación,
-      seguridad del paciente y toma de decisiones de enfermería.
-    </p>
-
-    <div class="badges">
-      <span class="badge">🗣️ Diálogos</span>
-      <span class="badge">👩‍⚕️ Personajes</span>
-      <span class="badge">🧠 Decisiones clínicas</span>
-      <span class="badge">⭐ Puntaje</span>
-      <span class="badge">📥 Descargar respuestas</span>
-    </div>
+  <div class="badges">
+    <div class="badge">💬 Diálogos</div>
+    <div class="badge">👩‍⚕️ Personajes</div>
+    <div class="badge">🧠 Decisiones clínicas</div>
+    <div class="badge">⭐ Puntaje</div>
+    <div class="badge">📥 Descargar respuestas</div>
   </div>
+</section>
+
+<div class="scorebar">
+  <div class="score">⭐ Puntaje: <span id="score">0</span></div>
+  <div class="timer">⏱️ <span id="timer">01:30:00</span></div>
+</div>
+
+<section id="home">
 
   <div class="cases">
 
-    <article class="case-card">
+    <div class="case-card">
 
-      <div class="character">👩🏻‍⚕️</div>
+      <div class="avatar">👩🏻‍⚕️</div>
 
-      <div class="level high">🔴 ALTA COMPLEJIDAD</div>
+      <div class="level red">🔴 ALTA COMPLEJIDAD</div>
 
-      <h2>Paula Andrea Arias Díaz</h2>
+      <h2>KELLY YOHANA ZAPATA PEREZ</h2>
 
       <p>
         Hemorragia postoperatoria y deterioro hemodinámico.
-        El estudiante deberá reconocer signos de alarma,
-        priorizar intervenciones y realizar escalamiento.
+        El estudiante deberá reconocer signos de alarma, priorizar
+        intervenciones, aplicar ABCDE y realizar escalamiento oportuno.
       </p>
 
-      <button class="btn btn-primary" onclick="startCase('arias')">
+      <button class="main-btn" onclick="startCase(0)">
         Iniciar caso →
       </button>
 
-    </article>
+    </div>
 
-    <article class="case-card">
+    <div class="case-card">
 
-      <div class="character">👩🏻‍⚕️</div>
+      <div class="avatar">👩🏽‍⚕️</div>
 
-      <div class="level medium">🟡 COMPLEJIDAD MEDIA-ALTA</div>
+      <div class="level yellow">🟡 COMPLEJIDAD MEDIA-ALTA</div>
 
-      <h2>Paula Andrea Morales Arana</h2>
+      <h2>LEIDY ALEXANDRA QUESADA QUINTERO</h2>
 
       <p>
         Valoración postoperatoria, identificación de riesgos,
-        seguridad del paciente y toma de decisiones con
-        información progresiva.
+        seguridad del paciente y toma de decisiones con información
+        progresiva.
       </p>
 
-      <button class="btn btn-primary" onclick="startCase('morales')">
+      <button class="main-btn" onclick="startCase(1)">
         Iniciar caso →
       </button>
 
-    </article>
+    </div>
 
+  </div>
+
+  <div class="panel download-area">
+    <h3>📥 Registro de respuestas</h3>
+    <p>
+      Las respuestas seleccionadas por los estudiantes se guardan
+      temporalmente en este dispositivo y pueden descargarse en formato CSV.
+    </p>
+
+    <button class="main-btn" onclick="downloadCSV()">
+      📥 Descargar respuestas
+    </button>
   </div>
 
 </section>
 
+<section id="simulation" class="simulation hidden">
 
-<section id="simulation" class="hidden">
+  <div class="panel">
 
-  <div class="sim">
+    <div class="patient-header">
 
-    <div class="sim-header">
-
-      <div>
-        <div id="caseLevel"></div>
-        <h2 id="caseTitle"></h2>
-        <div id="caseStep"></div>
+      <div class="patient-avatar" id="patientAvatar">
+        👩🏻‍⚕️
       </div>
 
-      <div class="score">
-        ⭐ <span id="score">0</span> puntos
+      <div>
+        <div class="level" id="caseLevel"></div>
+        <div class="patient-name" id="caseName"></div>
       </div>
 
     </div>
 
     <div class="progress">
-      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-bar" id="progress"></div>
     </div>
 
-    <div class="sim-body">
-
-      <div class="dialogue">
-
-        <div class="person" id="speaker">
-          Paciente
-        </div>
-
-        <p id="dialogueText"></p>
-
-        <button
-          class="btn btn-secondary"
-          onclick="speakCurrent()">
-          🔊 Escuchar diálogo
-        </button>
-
-      </div>
-
-
-      <div class="vitals" id="vitals"></div>
-
-
-      <div class="question">
-
-        <h3 id="questionText"></h3>
-
-        <div class="options" id="options"></div>
-
-        <div id="feedback" class="feedback hidden"></div>
-
-      </div>
-
-
-      <div class="actions">
-
-        <button
-          class="btn btn-secondary"
-          onclick="goHome()">
-          ← Salir
-        </button>
-
-        <button
-          id="nextButton"
-          class="btn btn-primary hidden"
-          onclick="nextQuestion()">
-          Continuar →
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section id="result" class="sim hidden">
-
-  <div class="result">
-
-    <div style="font-size:65px;">🏆</div>
-
-    <h2>Simulación finalizada</h2>
-
-    <p>Resultado obtenido:</p>
-
-    <div class="result-score">
-      <span id="finalScore">0</span>
-    </div>
-
-    <p id="resultMessage"></p>
-
-    <button
-      class="btn download"
-      onclick="downloadCSV()">
-      📥 Descargar respuestas
-    </button>
-
-    <br><br>
-
-    <button
-      class="btn btn-secondary"
-      onclick="restartCase()">
-      🔄 Reiniciar caso desde 0
-    </button>
-
-    <button
-      class="btn btn-secondary"
-      onclick="goHome()">
-      🏠 Volver a los casos
-    </button>
-
-  </div>
-
-
-  <div class="analysis">
-
-    <h3>🧠 Actividad de análisis</h3>
-
-    <p>
-      Después de terminar la simulación, redacte su análisis
-      clínico. Esta actividad puede utilizarse posteriormente
-      para la sustentación o presentación en PowerPoint.
-    </p>
-
-    <ol>
-      <li>¿Cuál fue la prioridad clínica principal?</li>
-      <li>¿Qué signos de alarma identificó?</li>
-      <li>¿Qué información fue determinante?</li>
-      <li>¿Qué acciones de enfermería priorizaría?</li>
-      <li>¿Qué comunicación y escalamiento realizaría?</li>
-    </ol>
-
-    <textarea
-      id="analysisText"
-      placeholder="Escriba aquí su análisis clínico..."></textarea>
-
-  </div>
-
-
-  <div class="wordgame">
-
-    <h3>🔎 Reto final: encuentra la palabra clave</h3>
-
-    <p>
-      Seleccione las letras para descubrir el concepto
-      fundamental relacionado con el caso.
-    </p>
-
-    <div id="wordGrid" class="wordgame-grid"></div>
-
-    <strong id="hiddenPhrase"></strong>
+    <div id="content"></div>
 
   </div>
 
@@ -669,733 +632,833 @@ footer{
 
 <script>
 
-const DATA = {
-
-arias: {
-
-title:"Paula Andrea Arias Díaz",
-
-level:"🔴 ALTA COMPLEJIDAD",
-
-dialogues:[
-"Enfermera, estoy muy mareada. Siento que me voy a desmayar.",
-"Enfermera, creo que estoy peor. Me siento muy débil.",
-"Me preocupa que el sangrado está aumentando."
-],
-
-vitals:[
-["PA","88/54 mmHg"],
-["FC","118 lpm"],
-["FR","24 rpm"],
-["SpO₂","94%"]
-],
-
-questions:[
+const cases = [
 
 {
-q:"Paciente de 58 años, dos horas después de cirugía abdominal, con sangrado abundante, palidez, mareo y presión arterial de 88/54 mmHg. ¿Cuál es la prioridad?",
-o:[
-"Continuar vigilancia rutinaria.",
-"Realizar valoración inmediata y reconocer posible deterioro hemodinámico.",
-"Dar líquidos por vía oral.",
-"Esperar al siguiente control de signos vitales."
-],
-a:1,
-f:"La combinación de sangrado, hipotensión, taquicardia y síntomas neurológicos requiere valoración inmediata y escalamiento."
+ name:"KELLY YOHANA ZAPATA PEREZ",
+ level:"🔴 ALTA COMPLEJIDAD",
+ avatar:"👩🏻‍⚕️",
+ questions:[
+
+ {
+  dialogue:"Enfermera, siento que algo no está bien. Estoy muy mareada y siento que me voy a desmayar.",
+  scene:"Paciente de 58 años, 2 horas después de cirugía abdominal. Se observa sangrado abundante en la herida. Está pálida, ansiosa y refiere mareo.",
+  vitals:["PA 88/54","FC 118","FR 24","SpO₂ 94%"],
+  question:"¿Cuál debe ser la prioridad inicial de enfermería?",
+  options:[
+   "Continuar con la valoración rutinaria.",
+   "Realizar valoración ABCDE y reconocer el deterioro hemodinámico.",
+   "Esperar a que el médico llegue.",
+   "Administrar alimentos para mejorar el estado general."
+  ],
+  correct:1,
+  feedback:"La prioridad es identificar y tratar rápidamente las amenazas vitales. Los signos sugieren compromiso circulatorio y posible hemorragia."
+ },
+
+ {
+  dialogue:"Enfermera, cada vez me siento más débil. ¿Por qué estoy tan fría?",
+  scene:"Han pasado varios minutos. La paciente continúa pálida y presenta piel fría y sudoración.",
+  vitals:["PA 82/50","FC 126","FR 26","SpO₂ 93%"],
+  question:"¿Qué hallazgo aumenta la sospecha de deterioro circulatorio?",
+  options:[
+   "Ansiedad aislada.",
+   "Piel fría, taquicardia e hipotensión.",
+   "Dolor leve.",
+   "Paciente consciente."
+  ],
+  correct:1,
+  feedback:"La combinación de hipotensión, taquicardia y piel fría puede indicar compromiso de la perfusión."
+ },
+
+ {
+  dialogue:"Siento que me voy a desmayar. No puedo mantenerme sentada.",
+  scene:"La paciente presenta mayor debilidad y refiere sensación de desmayo.",
+  vitals:["PA 78/48","FC 132","FR 28","SpO₂ 92%"],
+  question:"¿Cuál es la acción de mayor prioridad?",
+  options:[
+   "Dejar a la paciente sola para buscar ayuda.",
+   "Solicitar ayuda inmediata y realizar escalamiento del deterioro.",
+   "Esperar diez minutos y repetir signos.",
+   "Permitir que camine al baño."
+  ],
+  correct:1,
+  feedback:"El deterioro es progresivo. Se requiere comunicación y escalamiento oportunos, además de vigilancia continua."
+ },
+
+ {
+  dialogue:"Enfermera, ¿qué está pasando? Estoy muy asustada.",
+  scene:"La paciente está consciente pero presenta ansiedad creciente.",
+  vitals:["PA 76/46","FC 136","FR 30","SpO₂ 91%"],
+  question:"¿Qué comunicación es más adecuada?",
+  options:[
+   "No pasa nada, tranquilícese.",
+   "Comunicar con lenguaje claro, permanecer con la paciente y solicitar apoyo.",
+   "Decirle que espere.",
+   "Evitar explicarle la situación."
+  ],
+  correct:1,
+  feedback:"La comunicación debe ser clara, tranquilizadora y segura, evitando minimizar el deterioro."
+ },
+
+ {
+  dialogue:"Me siento muy débil y tengo mucha sed.",
+  scene:"La hemorragia continúa y los signos vitales permanecen alterados.",
+  vitals:["PA 74/44","FC 140","FR 32","SpO₂ 90%"],
+  question:"¿Qué conjunto de hallazgos debe comunicarse inmediatamente?",
+  options:[
+   "Dolor y ansiedad solamente.",
+   "Hipotensión, taquicardia, taquipnea, alteración de perfusión y sangrado.",
+   "Edad y antecedente quirúrgico únicamente.",
+   "Únicamente la saturación."
+  ],
+  correct:1,
+  feedback:"El escalamiento debe incluir los datos clínicos relevantes y la evolución del deterioro."
+ }
+
+ ]
+
 },
 
 {
-q:"¿Qué conjunto de datos tiene mayor valor para determinar la gravedad del cuadro?",
-o:[
-"Edad y tipo de cirugía únicamente.",
-"Dolor y ansiedad solamente.",
-"Sangrado activo, presión arterial, frecuencia cardíaca, estado mental y perfusión.",
-"Temperatura aislada."
-],
-a:2,
-f:"La valoración debe integrar perfusión, signos vitales, estado neurológico y magnitud del sangrado."
-},
+ name:"LEIDY ALEXANDRA QUESADA QUINTERO",
+ level:"🟡 COMPLEJIDAD MEDIA-ALTA",
+ avatar:"👩🏽‍⚕️",
+ questions:[
 
-{
-q:"Al realizar ABCDE, ¿qué conducta corresponde inicialmente?",
-o:[
-"Concentrarse únicamente en la herida.",
-"Evaluar vía aérea, respiración, circulación, estado neurológico y exposición.",
-"Esperar los resultados de laboratorio.",
-"Solicitar primero el alta."
-],
-a:1,
-f:"El enfoque ABCDE permite identificar rápidamente amenazas vitales."
-},
+ {
+  dialogue:"Enfermera, me duele la herida, pero creo que estoy bien.",
+  scene:"Paciente de 45 años, 4 horas después de hernioplastia. Está consciente y orientada. Herida limpia y seca.",
+  vitals:["PA 128/78","FC 86","FR 18","SpO₂ 97%"],
+  question:"Antes de concluir que está estable, ¿qué conducta es más segura?",
+  options:[
+   "Dar por terminada la valoración.",
+   "Realizar valoración sistemática, revisar evolución, dolor, herida y signos de alarma.",
+   "Intervenir sin valorar.",
+   "Atender otro paciente porque no hay prioridad."
+  ],
+  correct:1,
+  feedback:"Una valoración completa permite identificar cambios tempranos y establecer una línea basal."
+ },
 
-{
-q:"El sangrado aumenta y la paciente refiere sensación de desmayo. ¿Qué debe hacer enfermería?",
-o:[
-"Dejar a la paciente sola para buscar material.",
-"Realizar reevaluación inmediata y activar el escalamiento institucional correspondiente.",
-"Indicar que se calme.",
-"Esperar diez minutos."
-],
-a:1,
-f:"El deterioro clínico obliga a reevaluar y escalar oportunamente."
-},
+ {
+  dialogue:"Siento un poco más de dolor que hace una hora.",
+  scene:"La paciente refiere incremento progresivo del dolor.",
+  vitals:["PA 124/76","FC 96","FR 19","SpO₂ 97%"],
+  question:"¿Qué información adicional es más importante?",
+  options:[
+   "Solo la edad.",
+   "Características del dolor, herida, sangrado y evolución.",
+   "Color de cabello.",
+   "Preferencia alimentaria."
+  ],
+  correct:1,
+  feedback:"La valoración del dolor debe considerar características, evolución y posibles signos asociados."
+ },
 
-{
-q:"¿Qué hallazgo aumentaría la preocupación por hipoperfusión?",
-o:[
-"Paciente tranquila y orientada.",
-"Piel fría, palidez, alteración del estado mental y disminución de la presión arterial.",
-"Buena tolerancia oral.",
-"Dolor estable sin otros cambios."
-],
-a:1,
-f:"La piel fría, palidez, hipotensión y cambios neurológicos son signos de alarma."
-},
+ {
+  dialogue:"Ahora siento mareo cuando intento levantarme.",
+  scene:"La paciente presenta mareo al incorporarse.",
+  vitals:["PA 108/68","FC 104","FR 21","SpO₂ 96%"],
+  question:"¿Qué conducta es más segura?",
+  options:[
+   "Permitir que camine sola.",
+   "Prevenir una caída, valorar nuevamente y reevaluar signos vitales.",
+   "Ignorar el síntoma.",
+   "Suspender toda vigilancia."
+  ],
+  correct:1,
+  feedback:"El mareo puede aumentar el riesgo de caída y requiere reevaluación."
+ },
 
-{
-q:"¿Cuál es una comunicación adecuada al realizar el escalamiento?",
-o:[
-"Decir solamente: 'La paciente está mal'.",
-"Comunicar situación, antecedentes, valoración, signos vitales, evolución y necesidad identificada.",
-"Esperar a que otro profesional pregunte.",
-"No comunicar hasta tener diagnóstico definitivo."
-],
-a:1,
-f:"Una comunicación estructurada permite transmitir información clínica relevante y facilita decisiones oportunas."
-},
+ {
+  dialogue:"Enfermera, creo que la herida está diferente.",
+  scene:"Se observa discreto aumento del edema alrededor de la incisión.",
+  vitals:["PA 112/70","FC 108","FR 20","SpO₂ 96%"],
+  question:"¿Qué debe hacer enfermería?",
+  options:[
+   "Documentar y valorar la evolución de la herida.",
+   "Ignorarlo.",
+   "Dar el alta inmediatamente.",
+   "Permitir manipulación de la herida."
+  ],
+  correct:0,
+  feedback:"El cambio debe ser valorado, documentado y comunicado según los hallazgos."
+ },
 
-{
-q:"Después de una intervención inicial, la paciente continúa deteriorándose. ¿Qué principio debe orientar la conducta?",
-o:[
-"Continuar con el plan inicial sin cambios.",
-"Reevaluar continuamente y modificar la prioridad según la evolución.",
-"Suspender la vigilancia.",
-"Considerar que los signos anteriores ya no son relevantes."
-],
-a:1,
-f:"La condición clínica puede cambiar rápidamente; la reevaluación es fundamental."
-},
+ {
+  dialogue:"Tengo más dolor y siento que algo cambió.",
+  scene:"La evolución clínica requiere nueva valoración y comunicación.",
+  vitals:["PA 106/66","FC 112","FR 22","SpO₂ 95%"],
+  question:"¿Qué decisión demuestra mejor razonamiento clínico?",
+  options:[
+   "Basarse únicamente en un signo vital.",
+   "Comparar evolución, síntomas, signos vitales y hallazgos físicos.",
+   "Esperar hasta el siguiente turno.",
+   "No documentar porque la paciente está consciente."
+  ],
+  correct:1,
+  feedback:"El razonamiento clínico integra tendencias y múltiples fuentes de información."
+ }
 
-{
-q:"¿Cuál sería una conclusión clínica más adecuada?",
-o:[
-"Paciente estable porque está consciente.",
-"Paciente con posible compromiso hemodinámico que requiere intervención y escalamiento oportuno.",
-"Paciente con dolor postoperatorio habitual.",
-"Paciente que puede esperar hasta el próximo turno."
-],
-a:1,
-f:"La presencia de sangrado activo y deterioro hemodinámico convierte la situación en una prioridad."
-}
-
-]
-
-},
-
-morales: {
-
-title:"Paula Andrea Morales Arana",
-
-level:"🟡 COMPLEJIDAD MEDIA-ALTA",
-
-dialogues:[
-"Enfermera, me duele la herida, pero creo que estoy bien.",
-"Ahora siento un poco más de dolor y estoy más incómoda.",
-"Me siento rara, como si estuviera más débil."
-],
-
-vitals:[
-["PA","128/78 mmHg"],
-["FC","86 lpm"],
-["FR","18 rpm"],
-["SpO₂","97%"]
-],
-
-questions:[
-
-{
-q:"Paciente de 45 años, cuatro horas después de hernioplastia, consciente y orientada. ¿Qué conducta es más segura?",
-o:[
-"Dar por terminada la valoración.",
-"Realizar valoración sistemática, revisar evolución, dolor, herida y signos de alarma.",
-"Intervenir sin valorar.",
-"Atender a otro paciente porque no hay prioridad."
-],
-a:1,
-f:"La estabilidad inicial no elimina la necesidad de vigilancia y reevaluación."
-},
-
-{
-q:"¿Qué información debe explorarse durante la valoración postoperatoria?",
-o:[
-"Únicamente el dolor.",
-"Signos vitales, dolor, herida, sangrado, estado neurológico, eliminación y evolución.",
-"Solamente la temperatura.",
-"Únicamente lo que refiere el acompañante."
-],
-a:1,
-f:"Una valoración integral permite detectar cambios tempranos."
-},
-
-{
-q:"La paciente refiere aumento progresivo del dolor. ¿Qué debe hacer enfermería?",
-o:[
-"Ignorarlo porque es postoperatorio.",
-"Valorar características del dolor y buscar signos asociados o de alarma.",
-"Indicar que todos los dolores son normales.",
-"Suspender la vigilancia."
-],
-a:1,
-f:"El dolor debe valorarse por intensidad, características, evolución y signos asociados."
-},
-
-{
-q:"¿Qué dato debería generar mayor preocupación?",
-o:[
-"Dolor leve que mejora.",
-"Paciente cómoda y estable.",
-"Aumento progresivo del dolor acompañado de cambios en signos vitales.",
-"Paciente tolerando líquidos."
-],
-a:2,
-f:"La asociación entre deterioro clínico y aumento del dolor requiere reevaluación."
-},
-
-{
-q:"Si aparecen nuevos signos de deterioro, ¿qué debe hacer el estudiante?",
-o:[
-"Mantener la misma conducta.",
-"Reevaluar ABCDE y escalar según la situación.",
-"Esperar al cambio de turno.",
-"Registrar solamente el dolor."
-],
-a:1,
-f:"Ante cambios clínicos debe repetirse la valoración y priorizar nuevamente."
-},
-
-{
-q:"¿Qué principio de seguridad debe aplicarse durante todo el caso?",
-o:[
-"Actuar con base en suposiciones.",
-"Verificar información, identificar cambios y comunicar oportunamente.",
-"Evitar informar cambios para no alarmar.",
-"Realizar procedimientos sin valoración."
-],
-a:1,
-f:"La seguridad exige valoración, verificación y comunicación."
-},
-
-{
-q:"La paciente dice: 'Creo que estoy bien', pero los signos muestran un cambio. ¿Qué debe prevalecer?",
-o:[
-"Solo la percepción de la paciente.",
-"Solo la opinión del acompañante.",
-"La integración de entrevista, valoración objetiva y evolución clínica.",
-"Ninguna valoración adicional."
-],
-a:2,
-f:"El razonamiento clínico integra información subjetiva y objetiva."
-},
-
-{
-q:"¿Cuál es la mejor conclusión para este caso?",
-o:[
-"Paciente que nunca puede deteriorarse.",
-"Paciente que requiere vigilancia activa y reevaluación según evolución.",
-"Paciente sin necesidad de seguimiento.",
-"Paciente que debe ser dada de alta inmediatamente."
-],
-a:1,
-f:"La vigilancia postoperatoria debe mantenerse y adaptarse a la evolución."
-}
-
-]
+ ]
 
 }
 
-};
+];
 
 
-let state={
-case:null,
-question:0,
-score:0,
-answers:[],
-answered:false,
-start:null
-};
+let currentCase=0;
+let currentQuestion=0;
+let score=0;
+let voiceOn=true;
+let startTime=null;
+let timerInterval=null;
 
-let voiceEnabled=true;
+let responses=
+JSON.parse(localStorage.getItem("simulacion_respuestas")||"[]");
+
+const lastReset=
+localStorage.getItem("simulacion_reset");
+
+if(lastReset){
+  const diff=Date.now()-Number(lastReset);
+
+  if(diff>=86400000){
+    localStorage.removeItem("simulacion_score");
+    localStorage.setItem("simulacion_reset",Date.now());
+  }
+}else{
+  localStorage.setItem("simulacion_reset",Date.now());
+}
+
+score=
+Number(localStorage.getItem("simulacion_score")||0);
+
+document.getElementById("score").textContent=score;
 
 
-function startCase(key){
+function speak(text){
 
-state.case=key;
-state.question=0;
-state.score=0;
-state.answers=[];
-state.answered=false;
-state.start=Date.now();
+  if(!voiceOn) return;
 
-document.getElementById("home").classList.add("hidden");
-document.getElementById("result").classList.add("hidden");
-document.getElementById("simulation").classList.remove("hidden");
+  if("speechSynthesis" in window){
 
-renderQuestion();
+    speechSynthesis.cancel();
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
+    const u=new SpeechSynthesisUtterance(text);
 
+    u.lang="es-CO";
+    u.rate=.92;
+    u.pitch=1;
+
+    speechSynthesis.speak(u);
+  }
+}
+
+
+function toggleVoice(){
+
+  voiceOn=!voiceOn;
+
+  if(!voiceOn && "speechSynthesis" in window){
+    speechSynthesis.cancel();
+  }
+}
+
+
+function startCase(index){
+
+  currentCase=index;
+  currentQuestion=0;
+
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("simulation").classList.remove("hidden");
+
+  document.getElementById("caseName").textContent=
+    cases[index].name;
+
+  document.getElementById("caseLevel").textContent=
+    cases[index].level;
+
+  document.getElementById("patientAvatar").textContent=
+    cases[index].avatar;
+
+  if(!startTime){
+    startTime=Date.now();
+    startTimer();
+  }
+
+  renderQuestion();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+
+function startTimer(){
+
+  timerInterval=setInterval(()=>{
+
+    if(!startTime)return;
+
+    let elapsed=Date.now()-startTime;
+
+    let total=90*60*1000;
+
+    let remaining=Math.max(0,total-elapsed);
+
+    let h=Math.floor(remaining/3600000);
+
+    let m=Math.floor((remaining%3600000)/60000);
+
+    let s=Math.floor((remaining%60000)/1000);
+
+    document.getElementById("timer").textContent=
+      String(h).padStart(2,"0")+":"+
+      String(m).padStart(2,"0")+":"+
+      String(s).padStart(2,"0");
+
+    if(remaining<=0){
+      clearInterval(timerInterval);
+    }
+
+  },1000);
 }
 
 
 function renderQuestion(){
 
-const data=DATA[state.case];
-const q=data.questions[state.question];
+  const c=cases[currentCase];
 
-document.getElementById("caseTitle").textContent=data.title;
-document.getElementById("caseLevel").textContent=data.level;
+  const q=c.questions[currentQuestion];
 
-document.getElementById("caseStep").textContent=
-"Pregunta "+(state.question+1)+" de "+data.questions.length;
+  const percent=
+    ((currentQuestion)/c.questions.length)*100;
 
-document.getElementById("score").textContent=state.score;
+  document.getElementById("progress").style.width=
+    percent+"%";
 
-const percentage=
-(state.question/data.questions.length)*100;
+  let html=`
 
-document.getElementById("progressBar").style.width=
-percentage+"%";
+  <div class="dialogue">
 
+    <div class="dialogue-title">
+      👩‍⚕️ Paciente:
+    </div>
 
-const dialogueIndex=
-Math.min(state.question,data.dialogues.length-1);
+    <p>${q.dialogue}</p>
 
-document.getElementById("speaker").textContent=
-state.question%2===0 ? "👩‍⚕️ Enfermera" : "👤 Paciente";
+    <button class="speak-btn"
+      onclick="speak('${escapeText(q.dialogue)}')">
+      🔊 Escuchar al paciente
+    </button>
 
-document.getElementById("dialogueText").textContent=
-data.dialogues[dialogueIndex];
+  </div>
 
+  <h3>📋 Situación clínica</h3>
 
-let vitalsHTML="";
+  <p>${q.scene}</p>
 
-data.vitals.forEach(v=>{
-vitalsHTML+=`
-<div class="vital">
-${v[0]}
-<strong>${v[1]}</strong>
-</div>
-`;
-});
+  <div class="vitals">
+    ${q.vitals.map(v=>`
+      <div class="vital">
+        <span>Signo</span>
+        <strong>${v}</strong>
+      </div>
+    `).join("")}
+  </div>
 
-document.getElementById("vitals").innerHTML=vitalsHTML;
+  <div class="question">
 
+    <h3>
+      🧠 Pregunta ${currentQuestion+1} de ${c.questions.length}
+    </h3>
 
-document.getElementById("questionText").textContent=
-q.q;
+    <p><strong>${q.question}</strong></p>
 
+    <div id="options">
 
-let html="";
+      ${q.options.map((op,i)=>`
+        <button
+          class="option"
+          onclick="answer(${i})">
+          ${String.fromCharCode(65+i)}. ${op}
+        </button>
+      `).join("")}
 
-q.o.forEach((option,index)=>{
+    </div>
 
-html+=`
-<button
-class="option"
-onclick="answer(${index})">
-<strong>${String.fromCharCode(65+index)}.</strong>
-${option}
-</button>
-`;
+    <div id="feedback"></div>
 
-});
+  </div>
 
-document.getElementById("options").innerHTML=html;
+  `;
 
-document.getElementById("feedback").classList.add("hidden");
-
-document.getElementById("feedback").innerHTML="";
-
-document.getElementById("nextButton").classList.add("hidden");
-
-state.answered=false;
-
+  document.getElementById("content").innerHTML=html;
 }
 
 
 function answer(index){
 
-if(state.answered) return;
+  const c=cases[currentCase];
 
-state.answered=true;
+  const q=c.questions[currentQuestion];
 
-const data=DATA[state.case];
+  const buttons=
+    document.querySelectorAll(".option");
 
-const q=data.questions[state.question];
+  buttons.forEach((b,i)=>{
 
-state.answers[state.question]=index;
+    b.disabled=true;
 
-const buttons=
-document.querySelectorAll(".option");
+    if(i===q.correct){
+      b.classList.add("correct");
+    }
 
-buttons.forEach((button,i)=>{
+    if(i===index && i!==q.correct){
+      b.classList.add("wrong");
+    }
 
-if(i===q.a){
-button.classList.add("correct");
+  });
+
+  const isCorrect=index===q.correct;
+
+  if(isCorrect){
+
+    score+=10;
+
+    localStorage.setItem(
+      "simulacion_score",
+      score
+    );
+
+    document.getElementById("score").textContent=
+      score;
+
+  }
+
+  responses.push({
+
+    fecha:new Date().toLocaleString("es-CO"),
+
+    estudiante:promptStudentName(),
+
+    grupo:"",
+
+    caso:c.name,
+
+    pregunta:q.question,
+
+    respuestaSeleccionada:q.options[index],
+
+    respuestaCorrecta:q.options[q.correct],
+
+    resultado:isCorrect?
+      "Correcta":
+      "Incorrecta",
+
+    puntos:isCorrect?10:0
+
+  });
+
+  localStorage.setItem(
+    "simulacion_respuestas",
+    JSON.stringify(responses)
+  );
+
+  document.getElementById("feedback").innerHTML=`
+
+    <div class="feedback">
+
+      <strong>
+        ${isCorrect?"✅ Respuesta correcta":"❌ Respuesta incorrecta"}
+      </strong>
+
+      <p>${q.feedback}</p>
+
+      ${
+        isCorrect
+        ? "⭐ +10 puntos"
+        : "Revisa el razonamiento clínico antes de continuar."
+      }
+
+    </div>
+
+    <button class="next-btn"
+      onclick="nextQuestion()">
+
+      ${
+        currentQuestion<
+        c.questions.length-1
+        ?"Continuar →":
+        "Finalizar caso →"
+      }
+
+    </button>
+
+  `;
+
+  speak(
+    isCorrect
+    ?"Respuesta correcta. Excelente razonamiento clínico."
+    :"Respuesta incorrecta. Revisa los hallazgos y continúa con el análisis."
+  );
 }
 
-if(i===index && index!==q.a){
-button.classList.add("wrong");
-}
 
-button.disabled=true;
+function promptStudentName(){
 
-});
+  let name=
+    localStorage.getItem("student_name");
 
+  if(!name){
 
-if(index===q.a){
+    name=
+      prompt(
+        "Ingrese su nombre completo para registrar sus respuestas:"
+      );
 
-state.score+=10;
+    if(!name){
+      name="Estudiante";
+    }
 
-document.getElementById("feedback").innerHTML=
-"✅ <strong>Respuesta correcta.</strong><br><br>"+q.f;
+    localStorage.setItem(
+      "student_name",
+      name
+    );
 
-}else{
+  }
 
-document.getElementById("feedback").innerHTML=
-"❌ <strong>Respuesta incorrecta.</strong><br><br>"+q.f;
-
-}
-
-document.getElementById("feedback").classList.remove("hidden");
-
-document.getElementById("score").textContent=
-state.score;
-
-document.getElementById("nextButton").classList.remove("hidden");
-
-speak(
-index===q.a
-?"Respuesta correcta. "+q.f
-:"Respuesta incorrecta. "+q.f
-);
-
+  return name;
 }
 
 
 function nextQuestion(){
 
-if(!state.answered) return;
+  const c=cases[currentCase];
 
-if(
-state.question<
-DATA[state.case].questions.length-1
-){
+  if(currentQuestion<c.questions.length-1){
 
-state.question++;
+    currentQuestion++;
 
-renderQuestion();
+    renderQuestion();
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
 
-}else{
+  }else{
 
-finishCase();
+    showFinal();
 
-}
+  }
 
 }
 
 
-function finishCase(){
+function showFinal(){
 
-document.getElementById("simulation").classList.add("hidden");
+  const c=cases[currentCase];
 
-document.getElementById("result").classList.remove("hidden");
+  document.getElementById("progress").style.width="100%";
 
-document.getElementById("finalScore").textContent=
-state.score;
+  document.getElementById("content").innerHTML=`
 
-const max=
-DATA[state.case].questions.length*10;
+    <div class="result">
 
-let message="";
+      <div class="big">🎓</div>
 
-if(state.score>=max*.8){
+      <h2>¡Caso finalizado!</h2>
 
-message="🏆 Excelente desempeño. Demostró buen razonamiento clínico.";
+      <p>
+        Ha completado el caso clínico de
+        <strong>${c.name}</strong>.
+      </p>
 
-}else if(state.score>=max*.6){
+      <h2>
+        ⭐ Puntaje acumulado: ${score}
+      </h2>
 
-message="👍 Buen desempeño. Revise las decisiones en las que presentó dificultad.";
+    </div>
 
-}else{
+    <div class="analysis-box">
 
-message="📚 Se recomienda revisar nuevamente el caso y analizar las prioridades clínicas.";
+      <h3>🧠 Análisis clínico final</h3>
+
+      <p>
+        Explique con sus propias palabras:
+      </p>
+
+      <ol>
+
+        <li>
+          ¿Cuál fue el principal problema clínico?
+        </li>
+
+        <li>
+          ¿Qué signos de alarma identificó?
+        </li>
+
+        <li>
+          ¿Cómo aplicaría ABCDE?
+        </li>
+
+        <li>
+          ¿Qué información comunicaría al equipo?
+        </li>
+
+        <li>
+          ¿Qué intervención considera prioritaria y por qué?
+        </li>
+
+      </ol>
+
+      <textarea
+        placeholder="Escriba aquí su análisis clínico..."></textarea>
+
+    </div>
+
+    <div class="panel">
+
+      <h3>🔤 Reto final · Sopa de letras</h3>
+
+      <p>
+        Encuentre las palabras relacionadas con el caso.
+        Al finalizar, explique qué relación tienen con la situación clínica.
+      </p>
+
+      <div class="wordsearch">
+
+        <div class="grid" id="wordGrid"></div>
+
+        <div class="words">
+
+          <span class="word">ABC</span>
+          <span class="word">SHOCK</span>
+          <span class="word">SANGRADO</span>
+          <span class="word">PERFUSION</span>
+          <span class="word">ALARMA</span>
+          <span class="word">ENFERMERIA</span>
+          <span class="word">SEGURIDAD</span>
+          <span class="word">VALORACION</span>
+
+        </div>
+
+      </div>
+
+      <p id="hiddenMessage"></p>
+
+    </div>
+
+    <div class="download-area">
+
+      <h3>📥 Entrega de resultados</h3>
+
+      <p>
+        Descargue sus respuestas y entréguelas según las instrucciones
+        del docente.
+      </p>
+
+      <button class="main-btn"
+        onclick="downloadCSV()">
+
+        📥 Descargar mis respuestas
+
+      </button>
+
+    </div>
+
+    <button
+      class="back-btn"
+      onclick="backHome()">
+
+      ← Volver a los casos
+
+    </button>
+
+  `;
+
+  generateWordSearch();
+
+  speak(
+    "Caso finalizado. Recuerde realizar el análisis clínico y descargar sus respuestas."
+  );
+}
+
+
+function generateWordSearch(){
+
+  const letters=
+  "ENFERMERIAABCDEALARMASHOCKSANGRADOPERFUSIONSEGURIDADVALORACION";
+
+  const grid=
+    document.getElementById("wordGrid");
+
+  if(!grid)return;
+
+  grid.innerHTML="";
+
+  for(let i=0;i<144;i++){
+
+    const div=
+      document.createElement("div");
+
+    div.className="letter";
+
+    div.textContent=
+      letters[
+        Math.floor(
+          Math.random()*letters.length
+        )
+      ];
+
+    div.onclick=()=>{
+
+      div.classList.toggle("selected");
+
+      checkHiddenPhrase();
+
+    };
+
+    grid.appendChild(div);
+
+  }
 
 }
 
-document.getElementById("resultMessage").textContent=message;
 
-createWordSearch();
+function checkHiddenPhrase(){
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
+  const selected=
+    document.querySelectorAll(
+      ".letter.selected"
+    ).length;
 
-speak("La simulación ha finalizado. Su puntaje es "+state.score+" puntos.");
+  if(selected>=10){
+
+    document.getElementById(
+      "hiddenMessage"
+    ).innerHTML=`
+
+      🔐 <strong>Frase oculta:</strong><br><br>
+
+      <em>
+      “Una valoración oportuna puede cambiar el desenlace clínico.”
+      </em>
+
+    `;
+
+  }
 
 }
 
 
-function restartCase(){
+function escapeText(text){
 
-startCase(state.case);
-
-}
-
-
-function goHome(){
-
-document.getElementById("simulation").classList.add("hidden");
-
-document.getElementById("result").classList.add("hidden");
-
-document.getElementById("home").classList.remove("hidden");
-
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
+  return text
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/\n/g," ");
 
 }
 
 
 function downloadCSV(){
 
-const data=DATA[state.case];
+  if(responses.length===0){
 
-const rows=[
-[
-"Fecha",
-"Caso",
-"Pregunta",
-"Respuesta seleccionada",
-"Respuesta correcta",
-"Resultado",
-"Puntos"
-]
-];
+    alert(
+      "Todavía no hay respuestas registradas."
+    );
 
-data.questions.forEach((q,i)=>{
+    return;
 
-const selected=
-state.answers[i]!==undefined
-?q.o[state.answers[i]]
-:"Sin respuesta";
+  }
 
-const correct=
-q.o[q.a];
+  const headers=[
+    "Fecha",
+    "Estudiante",
+    "Grupo",
+    "Caso",
+    "Pregunta",
+    "Respuesta seleccionada",
+    "Respuesta correcta",
+    "Resultado",
+    "Puntos"
+  ];
 
-const result=
-state.answers[i]===q.a
-?"Correcta"
-:"Incorrecta";
+  const rows=
+    responses.map(r=>[
+      r.fecha,
+      r.estudiante,
+      r.grupo,
+      r.caso,
+      r.pregunta,
+      r.respuestaSeleccionada,
+      r.respuestaCorrecta,
+      r.resultado,
+      r.puntos
+    ]);
 
-const points=
-state.answers[i]===q.a
-?10
-:0;
+  const csv=[
+    headers,
+    ...rows
+  ]
+  .map(row=>
+    row.map(value=>
+      `"${String(value??"")
+      .replace(/"/g,'""')}"`
+    ).join(",")
+  )
+  .join("\n");
 
-rows.push([
-new Date().toLocaleString("es-CO"),
-data.title,
-q.q,
-selected,
-correct,
-result,
-points
-]);
+  const blob=
+    new Blob(
+      ["\ufeff"+csv],
+      {type:"text/csv;charset=utf-8;"}
+    );
 
-});
+  const url=
+    URL.createObjectURL(blob);
 
+  const a=
+    document.createElement("a");
 
-const csv=
-"\ufeff"+
-rows
-.map(row=>
-row.map(value=>
-'"'+
-String(value)
-.replace(/"/g,'""')+
-'"'
-).join(";")
-)
-.join("\r\n");
+  a.href=url;
 
+  a.download=
+    "respuestas_simulacion_clinica.csv";
 
-const blob=
-new Blob(
-[csv],
-{type:"text/csv;charset=utf-8;"}
-);
+  document.body.appendChild(a);
 
-const url=
-URL.createObjectURL(blob);
+  a.click();
 
-const link=
-document.createElement("a");
+  document.body.removeChild(a);
 
-link.href=url;
-
-link.download=
-"respuestas_"+
-
-data.title
-.normalize("NFD")
-.replace(/[\u0300-\u036f]/g,"")
-.replace(/\s+/g,"_")
-+".csv";
-
-document.body.appendChild(link);
-
-link.click();
-
-setTimeout(()=>{
-URL.revokeObjectURL(url);
-link.remove();
-},1000);
+  URL.revokeObjectURL(url);
 
 }
 
 
-function createWordSearch(){
+function backHome(){
 
-const letters=
-"ENFERMERIAABCDEGHIJKLMNOPQRSTUVWXYZ";
+  document
+    .getElementById("simulation")
+    .classList.add("hidden");
 
-const grid=
-document.getElementById("wordGrid");
+  document
+    .getElementById("home")
+    .classList.remove("hidden");
 
-grid.innerHTML="";
-
-for(let i=0;i<100;i++){
-
-const button=
-document.createElement("button");
-
-button.className="letter";
-
-button.textContent=
-letters[Math.floor(Math.random()*letters.length)];
-
-button.onclick=()=>{
-
-button.classList.toggle("selected");
-
-checkPhrase();
-
-};
-
-grid.appendChild(button);
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 
 }
-
-document.getElementById("hiddenPhrase").textContent="";
-
-}
-
-
-function checkPhrase(){
-
-const selected=
-[
-...document.querySelectorAll(".letter.selected")
-]
-.map(x=>x.textContent)
-.join("");
-
-const phrases=[
-"ENFERMERIA",
-"SEGURIDAD",
-"VALORACION",
-"PRIORIDAD"
-];
-
-const found=
-phrases.find(p=>
-selected.includes(p)
-);
-
-if(found){
-
-document.getElementById("hiddenPhrase").innerHTML=
-"🎉 ¡Frase encontrada! <strong>"+found+"</strong>";
-
-speak("Excelente. Encontraste la palabra "+found);
-
-}
-
-}
-
-
-function speakCurrent(){
-
-const text=
-document.getElementById("dialogueText").textContent;
-
-speak(text);
-
-}
-
-
-function speak(text){
-
-if(!voiceEnabled) return;
-
-if(!("speechSynthesis" in window)) return;
-
-window.speechSynthesis.cancel();
-
-const utterance=
-new SpeechSynthesisUtterance(text);
-
-utterance.lang="es-CO";
-
-utterance.rate=.9;
-
-utterance.pitch=1;
-
-window.speechSynthesis.speak(utterance);
-
-}
-
-
-function activarVoz(){
-
-voiceEnabled=true;
-
-speak("Voz activada");
-
-}
-
-
-function silenciarVoz(){
-
-voiceEnabled=false;
-
-window.speechSynthesis.cancel();
-
-}
-
 
 </script>
 
